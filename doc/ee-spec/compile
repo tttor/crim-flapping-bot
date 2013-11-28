@@ -1,0 +1,5 @@
+rm ee-spec.aux ee-spec.bbl ee-spec.blg ee-spec.log ee-spec.toc ee-spec.out
+pdflatex ee-spec.tex
+bibtex ee-spec.aux
+pdflatex ee-spec.tex
+pdflatex ee-spec.tex

@@ -2,13 +2,12 @@
 *~
 
 # TEX aux. files
-*.aux 
 *.bbl
 *.blg
 *.out
 *.log
 *.toc
-*.pdf
+*.aux
 
 # build output:
 */build/*

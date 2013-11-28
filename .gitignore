@@ -1,0 +1,14 @@
+# temp. editor backups:
+*~
+
+# TEX aux. files
+*.aux 
+*.bbl
+*.blg
+*.out
+*.log
+*.toc
+*.pdf
+
+# build output:
+*/build/*

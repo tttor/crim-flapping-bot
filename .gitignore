@@ -13,4 +13,4 @@
 */build/*
 
 # the main-and-hot file for flymaple programming
-./flymaple/main.cpp
+*flymaple/main.cpp

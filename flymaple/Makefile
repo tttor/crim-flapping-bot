@@ -52,7 +52,8 @@ include $(MAKEDIR)/build-templates.mk
 #     #include "wirish.h"
 # It slows compilation noticeably; remove after 1 release.
 TARGET_FLAGS    += -I$(LIBMAPLE_PATH)/include/libmaple                       \
-                   -I$(WIRISH_PATH)/include/wirish
+                   -I$(WIRISH_PATH)/include/wirish \
+                   -I$(SRCROOT)/gps
 TARGET_FLAGS += -I$(LIBRARIES_PATH) # for internal lib. includes, e.g. <Wire/WireBase.h>
 GLOBAL_CFLAGS   := -Os -g3 -gdwarf-2 -nostdlib \
                    -ffunction-sections -fdata-sections \

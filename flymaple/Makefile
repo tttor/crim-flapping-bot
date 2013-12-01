@@ -11,11 +11,15 @@ SRCROOT := .
 else
 SRCROOT := $(LIB_MAPLE_HOME)
 endif
+
 BUILD_PATH = build
 LIBMAPLE_PATH := $(SRCROOT)/libmaple
 WIRISH_PATH := $(SRCROOT)/wirish
 SUPPORT_PATH := $(SRCROOT)/support
 LIBRARIES_PATH := $(SRCROOT)/libraries
+
+XBEE_PATH := $(SRCROOT)/xbee
+
 # Support files for linker
 LDDIR := $(SUPPORT_PATH)/ld
 # Support files for this Makefile
@@ -51,8 +55,10 @@ include $(MAKEDIR)/build-templates.mk
 # or
 #     #include "wirish.h"
 # It slows compilation noticeably; remove after 1 release.
-TARGET_FLAGS    += -I$(LIBMAPLE_PATH)/include/libmaple                       \
-                   -I$(WIRISH_PATH)/include/wirish
+TARGET_FLAGS    += -I$(LIBMAPLE_PATH)/include/libmaple \
+                   -I$(WIRISH_PATH)/include/wirish \
+                   -I$(XBEE_PATH)/include
+                   
 TARGET_FLAGS += -I$(LIBRARIES_PATH) # for internal lib. includes, e.g. <Wire/WireBase.h>
 GLOBAL_CFLAGS   := -Os -g3 -gdwarf-2 -nostdlib \
                    -ffunction-sections -fdata-sections \

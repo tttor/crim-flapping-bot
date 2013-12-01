@@ -2,7 +2,7 @@
 #include <stdlib.h> // for Adafruit_GPS lib, and this _must_ be on top of all #include
 #include <wirish/wirish.h>
 
-#include <gps/Adafruit_GPS.cpp>
+#include <gps/Adafruit_GPS.h>
 
 Adafruit_GPS GPS(&Serial1);
 

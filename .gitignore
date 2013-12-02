@@ -14,3 +14,24 @@
 
 # the main-and-hot file for flymaple programming
 *flymaple/main.cpp
+
+# temporary CMake files
+*CMakeCache*
+*cmake*
+*.bin
+*Makefile*
+*CMakeCCompilerId.c
+*CMakeCXXCompilerId.cpp
+*TargetDirectories.txt
+*progress.marks
+*CXX.includecache
+*.make
+*depend.internal
+*.cpp.o
+*link.txt
+
+# built lib
+*.a
+
+# exe files
+bin/

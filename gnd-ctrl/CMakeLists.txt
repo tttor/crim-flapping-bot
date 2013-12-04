@@ -3,6 +3,7 @@ project(TEST)
 
 ## Include dir
 include_directories("${PROJECT_SOURCE_DIR}/inc")
+include_directories("../common/inc")
 
 include_directories ("${PROJECT_SOURCE_DIR}/lib/serial-port")
 add_subdirectory (lib/serial-port)

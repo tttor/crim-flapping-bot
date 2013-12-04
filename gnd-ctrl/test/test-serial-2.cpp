@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
     try {
  
-        TimeoutSerial serial("/dev/ttyACM1",9600);
+        TimeoutSerial serial("/dev/ttyUSB0",9600);
         serial.setTimeout(posix_time::seconds(5));
 
         ////Text test
@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
             //cout<<static_cast<int>(values[i])<<endl;
         //}
 
-        //cout<<serial.readStringUntil("\r\n")<<endl;
-        cout << serial.readString(5) << endl;
+        cout<<serial.readStringUntil("\n")<<endl;
+        //cout << serial.readString(5) << endl;
         
         serial.close();
   

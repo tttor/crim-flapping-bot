@@ -43,7 +43,7 @@
 //----------------------------------------------------------------------	
 //hashlib++ includes
 #include "hl_hashwrapper.h"
-#include "hl_md5.h"
+#include "hl_md5_for_flymaple.h"
 
 //----------------------------------------------------------------------	
 //STL includes

@@ -28,44 +28,53 @@
 
 //----------------------------------------------------------------------	
 
-/*
- * The hashlib++ MD5 implementation is derivative from the sourcecode
- * published in RFC 1321 
- * 
- * Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All
- * rights reserved.
- * 
- * License to copy and use this software is granted provided that it
- * is identified as the "RSA Data Security, Inc. MD5 Message-Digest
- * Algorithm" in all material mentioning or referencing this software
- * or this function.
- * 
- * License is also granted to make and use derivative works provided
- * that such works are identified as "derived from the RSA Data
- * Security, Inc. MD5 Message-Digest Algorithm" in all material
- * mentioning or referencing the derived work.
- * 
- * RSA Data Security, Inc. makes no representations concerning either
- * the merchantability of this software or the suitability of this
- * software for any particular purpose. It is provided "as is"
- * without express or implied warranty of any kind.
- * 
- * These notices must be retained in any copies of any part of this
- * documentation and/or software.
- */
+/**
+ *  @file 	hl_types.h
+ *  @brief	This file defines some global types
+ *  @date 	So 13 Jan 2008
+ */  
+
+//----------------------------------------------------------------------	
+//include protection
+#ifndef HLTYPES_H
+#define HLTYPES_H
 
 //----------------------------------------------------------------------	
 
 /**
- *  @file 	hl_md5.cpp
- *  @brief	This file contains the implementation of the MD5 class
- *  @date 	Mo 17 Sep 2007
- */  
+ * exactly 1 Byte
+ */
+typedef unsigned char 	hl_uint8;
 
-//----------------------------------------------------------------------
-//hashlib++ includes
-#include "hl_md5_for_flymaple.h"
+/**
+ * at least 2 Byte
+ */
+typedef unsigned short int 	hl_uint16;
+
+/**
+ * at least 4 Byte
+ */
+typedef unsigned int hl_uint32;
+
+/**
+* at least 8 Byte
+*/
+#ifdef __GNUC__
+	typedef unsigned long long int	hl_uint64;
+#elif __MINGW32__
+	typedef unsigned long long int	hl_uint64;
+#elif _MSC_VER
+	typedef unsigned __int64 hl_uint64;
+#else
+	#error "Unsuppported compiler." \
+               "Please use GCC,MINGW,MSVC " \
+	       " or define hl_uint64 for your compiler in hl_types.h line 62"
+#endif
 
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------	
+//end of include protection
+#endif
+
+//----------------------------------------------------------------------	
 //EOF

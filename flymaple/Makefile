@@ -19,6 +19,7 @@ SUPPORT_PATH := $(SRCROOT)/support
 LIBRARIES_PATH := $(SRCROOT)/libraries
 
 XBEE_PATH := $(SRCROOT)/xbee
+COMMON_PATH := ../common
 
 # Support files for linker
 LDDIR := $(SUPPORT_PATH)/ld
@@ -57,7 +58,8 @@ include $(MAKEDIR)/build-templates.mk
 # It slows compilation noticeably; remove after 1 release.
 TARGET_FLAGS    += -I$(LIBMAPLE_PATH)/include/libmaple \
                    -I$(WIRISH_PATH)/include/wirish \
-                   -I$(XBEE_PATH)/include
+                   -I$(XBEE_PATH)/include \
+                   -I$(COMMON_PATH)/inc
                    
 TARGET_FLAGS += -I$(LIBRARIES_PATH) # for internal lib. includes, e.g. <Wire/WireBase.h>
 GLOBAL_CFLAGS   := -Os -g3 -gdwarf-2 -nostdlib \

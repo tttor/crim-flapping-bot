@@ -32,6 +32,3 @@
 
 # built lib
 *.a
-
-# exe files
-bin/

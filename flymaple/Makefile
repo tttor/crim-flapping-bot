@@ -19,6 +19,7 @@ SUPPORT_PATH := $(SRCROOT)/support
 LIBRARIES_PATH := $(SRCROOT)/libraries
 
 XBEE_PATH := $(SRCROOT)/xbee
+RC_PATH := $(SRCROOT)/rc
 COMMON_PATH := ../common
 
 # Support files for linker
@@ -59,6 +60,7 @@ include $(MAKEDIR)/build-templates.mk
 TARGET_FLAGS    += -I$(LIBMAPLE_PATH)/include/libmaple \
                    -I$(WIRISH_PATH)/include/wirish \
                    -I$(XBEE_PATH)/include \
+                   -I$(RC_PATH)/include \
                    -I$(COMMON_PATH)/inc \
                    -I$(SRCROOT)/gps/include                     
 

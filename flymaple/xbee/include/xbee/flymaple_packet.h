@@ -13,8 +13,10 @@ namespace crim{
 
 static const size_t SERIAL_USB = 0;
 static const size_t SERIAL_1 = 1;
+static const size_t SERIAL_2 = 2;
+static const size_t SERIAL_3 = 3;
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // DECLARATION
 class FlymaplePacket: public Packet {
  public:
@@ -38,9 +40,9 @@ class FlymaplePacket: public Packet {
   size_t baud_;
   
   bool send_SerialUSB();
-  bool send_Serial1();
+  bool send_SerialX();
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 FlymaplePacket::FlymaplePacket(std::string port, size_t baud): baud_(baud) {
   if (port == "SerialUSB") {
@@ -48,24 +50,23 @@ FlymaplePacket::FlymaplePacket(std::string port, size_t baud): baud_(baud) {
   } else if( port == "Serial1") {
     port_ = SERIAL_1;
     Serial1.begin(baud_);
-  } 
+  } else if( port == "Serial2") {
+    port_ = SERIAL_2;
+    Serial2.begin(baud_);
+  } else if( port == "Serial3") {
+    port_ = SERIAL_3;
+    Serial3.begin(baud_);
+  }
 }
 
 bool FlymaplePacket::send() {
-  switch (port_) {
-    case SERIAL_USB: {
-      send_SerialUSB();
-      break;
-    }
-    case SERIAL_1: {
-      send_Serial1();
-      break;
-    }
-    default: {
-      return false;
-    }
+  bool status = false;
+  if (port_==SERIAL_USB) {
+    status = send_SerialUSB();
+  } else {
+    status = send_SerialX();
   }
-  return true;
+  return status;
 }
 
 bool FlymaplePacket::send_SerialUSB() {
@@ -73,10 +74,27 @@ bool FlymaplePacket::send_SerialUSB() {
   return true;
 }
 
-bool FlymaplePacket::send_Serial1() {
+bool FlymaplePacket::send_SerialX() {
   for (size_t i=0; i<packet_.length(); ++i) {
     char c = packet_[i];
-    Serial1.write(c);
+    
+    switch (port_) {
+      case SERIAL_1: {
+        Serial1.write(c);
+        break;
+      }
+      case SERIAL_2: {
+        Serial2.write(c);
+        break;
+      }
+      case SERIAL_3: {
+        Serial3.write(c);
+        break;
+      }
+      default: {
+        return false;
+      }
+    }
   }
   return true;
 }

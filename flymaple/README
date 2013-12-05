@@ -1,17 +1,41 @@
 For crim-flapping-bot _only:
-1) install gcc-arm-none-eabi-latest-linux32
+1) install gcc-arm-none-eabi-latest-linux32, e.g. to /opt/arm/bin
+if you are running 64-bit Ubuntu, then you have to run: $ sudo apt-get install ia32-libs
 2) modify /ets/sudoers to include
 Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/arm/bin"
 where /opt/arm/ is where you installed gcc-arm-none-eabi-latest-linux32
+This is to include gcc-arm-none-eabi-latest-linux32 installation path to the sudo's $PATH. 
+Notice that this is not the user's $PATH that may not be included in the sudo's $PATH.
 3) do 
 $ export BOARD=maple_RET6
+put this in ~/.bashrc to make it stick
 4) may need to upgrade dfu-util to vertion 0.7 
 5) sometimes, we have to practice the perpetual boot mode :)
 6) do all build processes with sudo, i.e.
 $ sudo make clean
 $ sudo make
 $ sudo make install
+
+actually, you can run $ make (assuming you have set $PATH to include where you installed gcc-arm-none-eabi-latest-linux32), but when you run $ make install, you likely get:
+
+Filter on vendor = 0x1eaf product = 0x0003
+Cannot open device 
+Opening DFU USB device... make: *** [install] Error 1
+
+Then, the solution is to $ sudo make install that creates some sudo's file so if you $ make clean, you get:
+
+$ make clean
+rm -rf build
+rm: cannot remove build/wirish/boards/maple/board.o': Permission denied
+rm: cannot removebuild/wirish/boards/maple/board.d': Permission denied
+make: *** [clean] Error 1
+
+Therefore, it is recommended to use sudo for each step ;)
+
 7) the main (hot) file: ./main.cpp is ignored by git
+
+Reference:  
+http://leaflabs.com/docs/unix-toolchain.html 
 
 ------------------------------------------------------------------------------
                    _ _ _                           _

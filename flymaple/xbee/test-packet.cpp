@@ -12,8 +12,8 @@ __attribute__((constructor)) void premain() {
 }
 
 int main(void) {
-    using namespace std;
-    using namespace crim;
+  using namespace std;
+  using namespace crim;
     
   // As if we were receiving data from a GPS sensor
   uint8_t hour, minute, seconds, year, month, day;
@@ -29,15 +29,15 @@ int main(void) {
   day = 4;
     
   float latitude, longitude, altitude;
-  float speed, angle, magvar;
+  char lat, lon;
   
-  latitude = 7.12345;
-  longitude = 1.12345;
+  latitude = 7.12345; lat = 'N';
+  longitude = 1.12345; lon = 'W';
   altitude = 2.34455;
   
+  float speed, angle, magvar;
   speed = 1.23456;
   angle = 1.23456;
-  magvar = 1.23456;
   
   boolean fix;
   uint8_t fixquality, satellites;
@@ -50,18 +50,23 @@ int main(void) {
   GPSData gps_data;
   gps_data.set_time(hour, minute, seconds, milliseconds);
   gps_data.set_date(year, month, day);
-  gps_data.set_pose(latitude, longitude, altitude);
-  gps_data.set_misc(speed, angle, magvar);
+  gps_data.set_pose(latitude, lat, longitude, lon, altitude);
+  gps_data.set_misc(speed, angle);
   gps_data.set_note(fix, fixquality, satellites);
   
   //
-  FlymaplePacket packet("Serial1", BAUD_RATE);
+  FlymaplePacket packet("SerialUSB", BAUD_RATE);
   
   while (true) {
     packet.wrap(gps_data);
-    packet.send();
     
-    delay(1000);
+    bool status = false;
+    status = packet.send();
+    
+    //if (status) SerialUSB.println("Sent!");
+    //else SerialUSB.println("NOT Sent!");
+    
+    delay(500);
   }
   
   return 0;

@@ -32,6 +32,10 @@ GPSData::GPSData() {
   content.at(0).push_back("GPS");// data id
 }
 
+GPSData::~GPSData() {
+  // nothing
+}
+
 void GPSData::set_note(boolean fix, uint8_t fixquality, uint8_t n_satellite) {
   vector<uint8_t> argv;
   argv.push_back((uint8_t)fix);

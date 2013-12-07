@@ -32,3 +32,6 @@
 
 # built lib
 *.a
+
+# ROS built
+gnd-ctrl-ros/devel/*

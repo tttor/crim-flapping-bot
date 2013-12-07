@@ -20,9 +20,9 @@ All text above must be included in any redistribution
 #ifndef _ADAFRUIT_GPS_H
 #define _ADAFRUIT_GPS_H
 
-#include "cstring"
-#include "cctype"
-#include "stdint.h" // for uint16_t, uint8_t, etc
+#include <cstring>
+#include <cctype>
+#include <stdint.h> // for uint16_t, uint8_t, etc
 
 //#include <lexical_cast.hpp>
 

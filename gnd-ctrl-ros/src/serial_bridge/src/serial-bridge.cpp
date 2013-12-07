@@ -6,6 +6,7 @@
 
 #include <serial_port/GndCtrlPacket.h>
 #include <data-format/string_data.h>
+#include <helper/helper.hpp>
 
 #include <sstream>
 
@@ -16,6 +17,8 @@ class SerialBridge {
   SerialBridge(ros::NodeHandle nh): nh_(nh) {
     gps_data_pub_ = nh_.advertise<sensor_msgs::NavSatFix>("gps_data", 1000);
     packet_ = crim::GndCtrlPacket("/dev/ttyUSB0", 9600, 5);
+
+    ROS_INFO("serial_bridge: up and running ;)");
   }
 
   ~SerialBridge(){
@@ -31,12 +34,13 @@ class SerialBridge {
       status = packet_.receive();
 
       if (status==0) { //is good
+        ROS_DEBUG_STREAM("received, status= " << status);
         crim::StringData data;
         data = packet_.unwrap();
 
         publish(data);
       } else {
-        cerr << "received, but corrupted; status= " << status << endl;
+        ROS_DEBUG_STREAM("received, but corrupted; status= " << status);
       }
 
       //
@@ -49,24 +53,23 @@ class SerialBridge {
   void publish(const crim::StringData& data) {
     using namespace std;
 
-    // dispacth the data based-on ID
+    // dispatch the data based-on ID then publish accordingly
     string id;
     id = data.content.at(0).at(0);
 
-    //
     if (id=="GPS") {
       int8_t status;
       status = boost::lexical_cast<int8_t>(data.content.at(5).at(0));
 
-      double latitude;
+      if (status) {
+        sensor_msgs::NavSatFix gps_data;
+        gps_data.status.status = sensor_msgs::NavSatStatus::STATUS_FIX;
+        gps_data.latitude = crim::Helper::convert_dms_to_dec(data.content.at(3).at(0), data.content.at(3).at(1));
+        gps_data.longitude = crim::Helper::convert_dms_to_dec(data.content.at(3).at(2), data.content.at(3).at(3));
+        gps_data.altitude = boost::lexical_cast<double>(data.content.at(3).at(4));
 
-      sensor_msgs::NavSatFix gps_data;
-      gps_data.status.status = sensor_msgs::NavSatStatus::STATUS_FIX;
-      gps_data.latitude = 1.12345;
-      gps_data.longitude = 2.12345;
-      gps_data.altitude = 3.12345;
-
-      gps_data_pub_.publish(gps_data);
+        gps_data_pub_.publish(gps_data);
+      }
     }
   }
 

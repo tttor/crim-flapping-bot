@@ -36,6 +36,7 @@ BOARD_INCLUDE_DIR := $(MAKEDIR)/board-includes
 # Try "make help" for more information on BOARD and MEMORY_TARGET;
 # these default to a Maple Flash build.
 BOARD ?= maple
+#BOARD ?= maple_RET6
 MEMORY_TARGET ?= flash
 
 # $(BOARD)- and $(MEMORY_TARGET)-specific configuration
@@ -61,8 +62,8 @@ TARGET_FLAGS    += -I$(LIBMAPLE_PATH)/include/libmaple \
                    -I$(WIRISH_PATH)/include/wirish \
                    -I$(XBEE_PATH)/include \
                    -I$(COMMON_PATH)/inc \
-                   -I$(SRCROOT)/gps/include \                    
-                   -I$(RC_PATH)/include 
+                   -I$(SRCROOT)/gps/include                     
+#                   -I$(RC_PATH)/include 
 
 TARGET_FLAGS += -I$(LIBRARIES_PATH) # for internal lib. includes, e.g. <Wire/WireBase.h>
 GLOBAL_CFLAGS   := -Os -g3 -gdwarf-2 -nostdlib \

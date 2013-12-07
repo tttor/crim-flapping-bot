@@ -5,14 +5,14 @@ for the ultimate GPS module!
 Tested and works great with the Adafruit Ultimate GPS module
 using MTK33x9 chipset
     ------> http://www.adafruit.com/products/746
-Pick one up today at the Adafruit electronics shop 
+Pick one up today at the Adafruit electronics shop
 and help support open source hardware & software! -ada
 
-Adafruit invests time and resources providing this open source code, 
-please support Adafruit and open-source hardware by purchasing 
+Adafruit invests time and resources providing this open source code,
+please support Adafruit and open-source hardware by purchasing
 products from Adafruit!
 
-Written by Limor Fried/Ladyada  for Adafruit Industries.  
+Written by Limor Fried/Ladyada  for Adafruit Industries.
 BSD license, check license.txt for more information
 All text above must be included in any redistribution
 ****************************************/
@@ -67,9 +67,9 @@ All text above must be included in any redistribution
 // ask for the release and version
 #define PMTK_Q_RELEASE "$PMTK605*31"
 
-// request for updates on antenna status 
-#define PGCMD_ANTENNA "$PGCMD,33,1*6C" 
-#define PGCMD_NOANTENNA "$PGCMD,33,0*6C" 
+// request for updates on antenna status
+#define PGCMD_ANTENNA "$PGCMD,33,1*6C"
+#define PGCMD_NOANTENNA "$PGCMD,33,0*6C"
 
 // how long to wait when we're looking for a response
 #define MAXWAITSENTENCE 5
@@ -84,16 +84,11 @@ All text above must be included in any redistribution
  //#include "NewSoftSerial.h"
 //#endif
 
-
+////////////////////////////////////////////////////////////////////////////////
+// DECLARATION
 class Adafruit_GPS {
  public:
-  void begin(uint16_t baud); 
-
-//#if ARDUINO >= 100 
-  //Adafruit_GPS(SoftwareSerial *ser); // Constructor when using SoftwareSerial
-//#else
-  //Adafruit_GPS(NewSoftSerial  *ser); // Constructor when using NewSoftSerial
-//#endif
+  void begin(uint16_t baud);
   Adafruit_GPS(HardwareSerial *ser); // Constructor when using HardwareSerial
 
   char *lastNMEA(void);
@@ -110,7 +105,7 @@ class Adafruit_GPS {
   void interruptReads(boolean r);
 
   boolean wakeup(void);
- boolean standby(void);
+  boolean standby(void);
 
   uint8_t hour, minute, seconds, year, month, day;
   uint16_t milliseconds;
@@ -126,9 +121,10 @@ class Adafruit_GPS {
 
   uint16_t LOCUS_serial, LOCUS_records;
   uint8_t LOCUS_type, LOCUS_mode, LOCUS_config, LOCUS_interval, LOCUS_distance, LOCUS_speed, LOCUS_status, LOCUS_percent;
+
  private:
   boolean paused;
-  
+
   uint8_t parseResponse(char *response);
 //#if ARDUINO >= 100
   //SoftwareSerial *gpsSwSerial;
@@ -138,7 +134,7 @@ class Adafruit_GPS {
   HardwareSerial *gpsHwSerial;
 };
 
-//---------------------------------------------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 // how long are max NMEA lines to parse?
 #define MAXLINELENGTH 120
@@ -162,8 +158,8 @@ boolean Adafruit_GPS::parse(char *nmea) {
   if (nmea[strlen(nmea)-4] == '*') {
     uint16_t sum = parseHex(nmea[strlen(nmea)-3]) * 16;
     sum += parseHex(nmea[strlen(nmea)-2]);
-    
-    // check checksum 
+
+    // check checksum
     for (uint8_t i=1; i < (strlen(nmea)-4); i++) {
       sum ^= nmea[i];
     }
@@ -239,7 +235,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
 
     p = strchr(p, ',')+1;
     // Serial.println(p);
-    if (p[0] == 'A') 
+    if (p[0] == 'A')
       fix = true;
     else if (p[0] == 'V')
       fix = false;
@@ -288,19 +284,22 @@ boolean Adafruit_GPS::parse(char *nmea) {
 }
 
 char Adafruit_GPS::read(void) {
+  SerialUSB.println("reading...");
+
   char c = 0;
-  
+
   if (paused) return c;
 
-  //if(gpsSwSerial) {
-    //if(!gpsSwSerial->available()) return c;
-    //c = gpsSwSerial->read();
-  //} else {
-    if(!gpsHwSerial->available()) return c;
-    c = gpsHwSerial->read();
-  //}
+  if(!gpsHwSerial->available()) {
+    SerialUSB.println("!gpsHwSerial->available()");
+    return c;
+  } else {
+    SerialUSB.println("gpsHwSerial->available()");
+  }
+  c = gpsHwSerial->read();
 
-  //Serial.print(c);
+  SerialUSB.print(c);
+  SerialUSB.println("");
 
   if (c == '$') {
     currentline[lineidx] = 0;
@@ -335,7 +334,7 @@ char Adafruit_GPS::read(void) {
 //#if ARDUINO >= 100
 //Adafruit_GPS::Adafruit_GPS(SoftwareSerial *ser)
 //#else
-//Adafruit_GPS::Adafruit_GPS(NewSoftSerial *ser) 
+//Adafruit_GPS::Adafruit_GPS(NewSoftSerial *ser)
 //#endif
 //{
   //common_init();     // Set everything to common state, then...
@@ -350,7 +349,6 @@ Adafruit_GPS::Adafruit_GPS(HardwareSerial *ser) {
 
 // Initialization code used by all constructor types
 void Adafruit_GPS::common_init(void) {
-  //gpsSwSerial = NULL; // Set both to NULL, then override correct
   gpsHwSerial = NULL; // port pointer in corresponding constructor
   recvdflag   = false;
   paused      = false;
@@ -359,32 +357,26 @@ void Adafruit_GPS::common_init(void) {
   lastline    = line2;
 
   hour = minute = seconds = year = month = day =
-    fixquality = satellites = 0; // uint8_t
+  fixquality = satellites = 0; // uint8_t
   lat = lon = mag = 0; // char
   fix = false; // boolean
   milliseconds = 0; // uint16_t
   latitude = longitude = geoidheight = altitude =
-    speed = angle = magvariation = HDOP = 0.0; // float
+  speed = angle = magvariation = HDOP = 0.0; // float
 }
 
 void Adafruit_GPS::begin(uint16_t baud)
 {
-  //if(gpsSwSerial) 
-    //gpsSwSerial->begin(baud);
-  //else            
-    gpsHwSerial->begin(baud);
-
+  gpsHwSerial->begin(baud);
   delay(10);
 }
 
 void Adafruit_GPS::sendCommand(char *str) {
-  //if(gpsSwSerial) 
-    //gpsSwSerial->println(str);
-  //else            
-    gpsHwSerial->println(str);
+  gpsHwSerial->println(str);
 }
 
 boolean Adafruit_GPS::newNMEAreceived(void) {
+  SerialUSB.println("newNMEAreceived(void)");
   return recvdflag;
 }
 
@@ -414,14 +406,14 @@ boolean Adafruit_GPS::waitForSentence(char *wait4me, uint8_t max) {
 
   uint8_t i=0;
   while (i < max) {
-    if (newNMEAreceived()) { 
+    if (newNMEAreceived()) {
       char *nmea = lastNMEA();
       strncpy(str, nmea, 20);
       str[19] = 0;
       i++;
 
       if (strstr(str, wait4me))
-	return true;
+  return true;
     }
   }
 
@@ -436,24 +428,24 @@ boolean Adafruit_GPS::LOCUS_StartLogger(void) {
 
 boolean Adafruit_GPS::LOCUS_ReadStatus(void) {
   sendCommand(PMTK_LOCUS_QUERY_STATUS);
-  
+
   if (! waitForSentence("$PMTKLOG"))
     return false;
 
   char *response = lastNMEA();
   uint16_t parsed[10];
   uint8_t i;
-  
+
   for (i=0; i<10; i++) parsed[i] = -1;
-  
+
   response = strchr(response, ',');
   for (i=0; i<10; i++) {
-    if (!response || (response[0] == 0) || (response[0] == '*')) 
+    if (!response || (response[0] == 0) || (response[0] == '*'))
       break;
     response++;
     parsed[i]=0;
-    while ((response[0] != ',') && 
-	   (response[0] != '*') && (response[0] != 0)) {
+    while ((response[0] != ',') &&
+     (response[0] != '*') && (response[0] != 0)) {
       parsed[i] *= 10;
       char c = response[0];
       if (isdigit(c))
@@ -466,7 +458,7 @@ boolean Adafruit_GPS::LOCUS_ReadStatus(void) {
   LOCUS_serial = parsed[0];
   LOCUS_type = parsed[1];
   if (isalpha(parsed[2])) {
-    parsed[2] = parsed[2] - 'a' + 10; 
+    parsed[2] = parsed[2] - 'a' + 10;
   }
   LOCUS_mode = parsed[2];
   LOCUS_config = parsed[3];

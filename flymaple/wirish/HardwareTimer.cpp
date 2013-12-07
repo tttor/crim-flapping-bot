@@ -24,47 +24,39 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#include <wirish/HardwareTimer.h>
-
-#include <libmaple/rcc.h>
-#include <wirish/ext_interrupts.h> // for noInterrupts(), interrupts()
-#include <wirish/wirish_math.h>
-#include <board/board.h>           // for CYCLES_PER_MICROSECOND
+#include "HardwareTimer.h"
+#include "boards.h"             // for CYCLES_PER_MICROSECOND
+#include "wirish_math.h"
 
 // TODO [0.1.0] Remove deprecated pieces
 
-/*
- * Evil hack to infer this->dev from timerNum in the HardwareTimer
- * constructor. See:
- *
- * http://www.parashift.com/c++-faq-lite/pointers-to-members.html#faq-33.2
- * http://yosefk.com/c++fqa/function.html#fqa-33.2
- */
+#ifdef STM32_MEDIUM_DENSITY
+#define NR_TIMERS 4
+#elif defined(STM32_HIGH_DENSITY)
+#define NR_TIMERS 8
+#else
+#error "Unsupported density"
+#endif
 
-extern "C" {
-    static timer_dev **this_devp;
-    static rcc_clk_id this_id;
-    static void set_this_dev(timer_dev *dev) {
-        if (dev->clk_id == this_id) {
-            *this_devp = dev;
-        }
-    }
-}
-
-/*
- * HardwareTimer routines
- */
+#define MAX_RELOAD ((1 << 16) - 1)
 
 HardwareTimer::HardwareTimer(uint8 timerNum) {
-    rcc_clk_id timerID = (rcc_clk_id)(RCC_TIMER1 + (timerNum - 1));
-    this->dev = NULL;
-    noInterrupts(); // Hack to ensure we're the only ones using
-                    // set_this_dev() and friends. TODO: use a lock.
-    this_id = timerID;
-    this_devp = &this->dev;
-    timer_foreach(set_this_dev);
-    interrupts();
-    ASSERT(this->dev != NULL);
+    if (timerNum > NR_TIMERS) {
+        ASSERT(0);
+    }
+    timer_dev *devs[] = {
+        TIMER1,
+        TIMER2,
+        TIMER3,
+        TIMER4,
+#ifdef STM32_HIGH_DENSITY
+        TIMER5,
+        TIMER6,
+        TIMER7,
+        TIMER8,
+#endif
+    };
+    this->dev = devs[timerNum - 1];
 }
 
 void HardwareTimer::pause(void) {
@@ -100,7 +92,6 @@ void HardwareTimer::setCount(uint16 val) {
     timer_set_count(this->dev, min(val, ovf));
 }
 
-#define MAX_RELOAD ((1 << 16) - 1)
 uint16 HardwareTimer::setPeriod(uint32 microseconds) {
     // Not the best way to handle this edge case?
     if (!microseconds) {
@@ -111,7 +102,7 @@ uint16 HardwareTimer::setPeriod(uint32 microseconds) {
 
     uint32 period_cyc = microseconds * CYCLES_PER_MICROSECOND;
     uint16 prescaler = (uint16)(period_cyc / MAX_RELOAD + 1);
-    uint16 overflow = (uint16)((period_cyc + (prescaler / 2)) / prescaler);
+    uint16 overflow = (uint16)round(period_cyc / prescaler);
     this->setPrescaleFactor(prescaler);
     this->setOverflow(overflow);
     return overflow;

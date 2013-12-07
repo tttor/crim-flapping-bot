@@ -2,7 +2,6 @@
  * The MIT License
  *
  * Copyright (c) 2010 Perry Hung.
- * Copyright (c) 2010, 2011 LeafLabs, LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,11 +25,11 @@
  *****************************************************************************/
 
 /**
- * @file libmaple/systick.c
- * @brief System timer (SysTick).
+ * @file systick.c
+ * @brief System timer interrupt handler and initialization routines
  */
 
-#include <libmaple/systick.h>
+#include "systick.h"
 
 volatile uint32 systick_uptime_millis;
 static void (*systick_user_callback)(void);

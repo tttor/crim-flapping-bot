@@ -22,8 +22,6 @@
 # along with stm32loader; see the file COPYING3.  If not see
 # <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function
-
 import sys, getopt
 import serial
 import time
@@ -40,28 +38,17 @@ except:
     usepbar = 0
 
 # Verbose level
-QUIET = 5
+QUIET = 20
 
 def mdebug(level, message):
-    if QUIET >= level:
-        print(message, file=sys.stderr)
+    if(QUIET >= level):
+        print >> sys.stderr , message
 
-# Takes chip IDs (obtained via Get ID command) to human-readable names
-CHIP_ID_STRS = {0x410: 'STM32F1, performance, medium-density',
-                0x411: 'STM32F2',
-                0x412: 'STM32F1, performance, low-density',
-                0x413: 'STM32F4',
-                0x414: 'STM32F1, performance, high-density',
-                0x416: 'STM32L1, performance, medium-density',
-                0x418: 'STM32F1, connectivity',
-                0x420: 'STM32F1, value, medium-density',
-                0x428: 'STM32F1, value, high-density',
-                0x430: 'STM32F1, performance, XL-density'}
 
 class CmdException(Exception):
     pass
 
-class CommandInterface(object):
+class CommandInterface:
     def open(self, aport='/dev/tty.usbserial-FTD3TMCH', abaudrate=115200) :
         self.sp = serial.Serial(
             port=aport,
@@ -75,13 +62,8 @@ class CommandInterface(object):
         )
 
 
-    def _wait_for_ack(self, info="", timeout=0):
-        stop = time.time() + timeout
-        got = None
-        while not got:
-            got = self.sp.read(1)
-            if time.time() > stop:
-                break
+    def _wait_for_ask(self, info = ""):
+        got = self.sp.read(1)
 
         if not got:
             raise CmdException("No response to %s" % info)
@@ -133,7 +115,7 @@ class CommandInterface(object):
     def cmdGeneric(self, cmd):
         self.sp.write(chr(cmd))
         self.sp.write(chr(cmd ^ 0xFF)) # Control byte
-        return self._wait_for_ack(hex(cmd))
+        return self._wait_for_ask(hex(cmd))
 
     def cmdGet(self):
         if self.cmdGeneric(0x00):
@@ -143,7 +125,7 @@ class CommandInterface(object):
             mdebug(10, "    Bootloader version: "+hex(version))
             dat = map(lambda c: hex(ord(c)), self.sp.read(len))
             mdebug(10, "    Available commands: "+str(dat))
-            self._wait_for_ack("0x00 end")
+            self._wait_for_ask("0x00 end")
             return version
         else:
             raise CmdException("Get (0x00) failed")
@@ -153,7 +135,7 @@ class CommandInterface(object):
             mdebug(10, "*** GetVersion command")
             version = ord(self.sp.read())
             self.sp.read(2)
-            self._wait_for_ack("0x01 end")
+            self._wait_for_ask("0x01 end")
             mdebug(10, "    Bootloader version: "+hex(version))
             return version
         else:
@@ -164,7 +146,7 @@ class CommandInterface(object):
             mdebug(10, "*** GetID command")
             len = ord(self.sp.read())
             id = self.sp.read(len+1)
-            self._wait_for_ack("0x02 end")
+            self._wait_for_ask("0x02 end")
             return id
         else:
             raise CmdException("GetID (0x02) failed")
@@ -184,11 +166,11 @@ class CommandInterface(object):
         if self.cmdGeneric(0x11):
             mdebug(10, "*** ReadMemory command")
             self.sp.write(self._encode_addr(addr))
-            self._wait_for_ack("0x11 address failed")
+            self._wait_for_ask("0x11 address failed")
             N = (lng - 1) & 0xFF
             crc = N ^ 0xFF
             self.sp.write(chr(N) + chr(crc))
-            self._wait_for_ack("0x11 length failed")
+            self._wait_for_ask("0x11 length failed")
             return map(lambda c: ord(c), self.sp.read(lng))
         else:
             raise CmdException("ReadMemory (0x11) failed")
@@ -198,7 +180,7 @@ class CommandInterface(object):
         if self.cmdGeneric(0x21):
             mdebug(10, "*** Go command")
             self.sp.write(self._encode_addr(addr))
-            self._wait_for_ack("0x21 go failed")
+            self._wait_for_ask("0x21 go failed")
         else:
             raise CmdException("Go (0x21) failed")
 
@@ -208,7 +190,7 @@ class CommandInterface(object):
         if self.cmdGeneric(0x31):
             mdebug(10, "*** Write memory command")
             self.sp.write(self._encode_addr(addr))
-            self._wait_for_ack("0x31 address failed")
+            self._wait_for_ask("0x31 address failed")
             #map(lambda c: hex(ord(c)), data)
             lng = (len(data)-1) & 0xFF
             mdebug(10, "    %s bytes to write" % [lng+1]);
@@ -218,7 +200,7 @@ class CommandInterface(object):
                 crc = crc ^ c
                 self.sp.write(chr(c))
             self.sp.write(chr(crc))
-            self._wait_for_ack("0x31 programming failed")
+            self._wait_for_ask("0x31 programming failed")
             mdebug(10, "    Write memory done")
         else:
             raise CmdException("Write memory (0x31) failed")
@@ -239,29 +221,10 @@ class CommandInterface(object):
                     crc = crc ^ c
                     self.sp.write(chr(c))
                 self.sp.write(chr(crc))
-            self._wait_for_ack("0x43 erasing failed")
+            self._wait_for_ask("0x43 erasing failed")
             mdebug(10, "    Erase memory done")
         else:
             raise CmdException("Erase memory (0x43) failed")
-
-
-    # TODO support for non-global mass erase
-    GLOBAL_ERASE_TIMEOUT_SECONDS = 20   # This takes a while
-    def cmdExtendedEraseMemory(self):
-        if self.cmdGeneric(0x44):
-            mdebug(10, "*** Extended erase memory command")
-            # Global mass erase
-            mdebug(5, "Global mass erase; this may take a while")
-            self.sp.write(chr(0xFF))
-            self.sp.write(chr(0xFF))
-            # Checksum
-            self.sp.write(chr(0x00))
-            self._wait_for_ack("0x44 extended erase failed",
-                               timeout=self.GLOBAL_ERASE_TIMEOUT_SECONDS)
-            mdebug(10, "    Extended erase memory done")
-        else:
-            raise CmdException("Extended erase memory (0x44) failed")
-
 
     def cmdWriteProtect(self, sectors):
         if self.cmdGeneric(0x63):
@@ -272,7 +235,7 @@ class CommandInterface(object):
                 crc = crc ^ c
                 self.sp.write(chr(c))
             self.sp.write(chr(crc))
-            self._wait_for_ack("0x63 write protect failed")
+            self._wait_for_ask("0x63 write protect failed")
             mdebug(10, "    Write protect done")
         else:
             raise CmdException("Write Protect memory (0x63) failed")
@@ -280,8 +243,8 @@ class CommandInterface(object):
     def cmdWriteUnprotect(self):
         if self.cmdGeneric(0x73):
             mdebug(10, "*** Write Unprotect command")
-            self._wait_for_ack("0x73 write unprotect failed")
-            self._wait_for_ack("0x73 write unprotect 2 failed")
+            self._wait_for_ask("0x73 write unprotect failed")
+            self._wait_for_ask("0x73 write unprotect 2 failed")
             mdebug(10, "    Write Unprotect done")
         else:
             raise CmdException("Write Unprotect (0x73) failed")
@@ -289,8 +252,8 @@ class CommandInterface(object):
     def cmdReadoutProtect(self):
         if self.cmdGeneric(0x82):
             mdebug(10, "*** Readout protect command")
-            self._wait_for_ack("0x82 readout protect failed")
-            self._wait_for_ack("0x82 readout protect 2 failed")
+            self._wait_for_ask("0x82 readout protect failed")
+            self._wait_for_ask("0x82 readout protect 2 failed")
             mdebug(10, "    Read protect done")
         else:
             raise CmdException("Readout protect (0x82) failed")
@@ -298,8 +261,8 @@ class CommandInterface(object):
     def cmdReadoutUnprotect(self):
         if self.cmdGeneric(0x92):
             mdebug(10, "*** Readout Unprotect command")
-            self._wait_for_ack("0x92 readout unprotect failed")
-            self._wait_for_ack("0x92 readout unprotect 2 failed")
+            self._wait_for_ask("0x92 readout unprotect failed")
+            self._wait_for_ask("0x92 readout unprotect 2 failed")
             mdebug(10, "    Read Unprotect done")
         else:
             raise CmdException("Readout unprotect (0x92) failed")
@@ -358,7 +321,7 @@ class CommandInterface(object):
 
 
 def usage():
-    print("""Usage: %s [-hqVewvr] [-l length] [-p port] [-b baud] [-a addr] [file.bin]
+    print """Usage: %s [-hqVewvr] [-l length] [-p port] [-b baud] [-a addr] [file.bin]
     -h          This help
     -q          Quiet
     -V          Verbose
@@ -373,7 +336,7 @@ def usage():
 
     ./stm32loader.py -e -w -v example/main.bin
 
-    """ % sys.argv[0])
+    """ % sys.argv[0]
 
 def read(filename):
     """Read the file to be programmed and turn it into a binary"""
@@ -406,6 +369,14 @@ def read(filename):
 
 if __name__ == "__main__":
 
+    # Import Psyco if available
+    try:
+        import psyco
+        psyco.full()
+        print "Using Psyco..."
+    except ImportError:
+        pass
+
     conf = {
             'port': 'auto',
             'baud': 115200,
@@ -422,11 +393,13 @@ if __name__ == "__main__":
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "hqVewvrp:b:a:l:")
-    except getopt.GetoptError as err:
+    except getopt.GetoptError, err:
         # print help information and exit:
-        print(str(err)) # will print something like "option -a not recognized"
+        print str(err) # will print something like "option -a not recognized"
         usage()
         sys.exit(2)
+
+    QUIET = 5
 
     for o, a in opts:
         if o == '-V':
@@ -452,6 +425,8 @@ if __name__ == "__main__":
             conf['address'] = eval(a)
         elif o == '-l':
             conf['len'] = eval(a)
+#        elif o == '-f':
+#            conf['fname'] = a
         else:
             assert False, "unhandled option"
 
@@ -481,7 +456,7 @@ if __name__ == "__main__":
         try:
             cmd.initChip()
         except CmdException:
-            print("Can't init. Ensure BOOT0=1, BOOT1=0, and reset device")
+            print "Can't init. Ensure that BOOT0 is enabled and reset device"
 
         bootversion = cmd.cmdGet()
 
@@ -490,24 +465,20 @@ if __name__ == "__main__":
         if bootversion < 20 or bootversion >= 100:
             raise Exception('Unreasonable bootloader version %d' % bootversion)
 
-        chip_id = cmd.cmdGetID()
-        assert len(chip_id) == 2, "Unreasonable chip id: %s" % repr(chip_id)
-        chip_id_num = (ord(chip_id[0]) << 8) | ord(chip_id[1])
-        chip_id_str = CHIP_ID_STRS.get(chip_id_num, None)
+        id = [ord(x) for x in cmd.cmdGetID()]
+        mdebug(0, "Chip id '%s'" % ' '.join('0x%x' % x for x in id))
 
-        if chip_id_str is None:
-            mdebug(0, 'Warning: unrecognised chip ID 0x%x' % chip_id_num)
-        else:
-            mdebug(0, "Chip id 0x%x, %s" % (chip_id_num, chip_id_str))
+        if len(id) < 2 or id[0] != 0x04:
+            raise Exception('Unrecognised chip ID')
+
+#    cmd.cmdGetVersion()
+#    cmd.cmdGetID()
+#    cmd.cmdReadoutUnprotect()
+#    cmd.cmdWriteUnprotect()
+#    cmd.cmdWriteProtect([0, 1])
 
         if conf['erase']:
-            # Pre-3.0 bootloaders use the erase memory
-            # command. Starting with 3.0, extended erase memory
-            # replaced this command.
-            if bootversion < 0x30:
-                cmd.cmdEraseMemory()
-            else:
-                cmd.cmdExtendedEraseMemory()
+            cmd.cmdEraseMemory()
 
         if conf['write']:
             cmd.writeMemory(conf['address'], data)
@@ -515,18 +486,20 @@ if __name__ == "__main__":
         if conf['verify']:
             verify = cmd.readMemory(conf['address'], len(data))
             if(data == verify):
-                print("Verification OK")
+                print "Verification OK"
             else:
-                print("Verification FAILED")
-                print(str(len(data)) + ' vs ' + str(len(verify)))
+                print "Verification FAILED"
+                print str(len(data)) + ' vs ' + str(len(verify))
                 for i in xrange(0, len(data)):
                     if data[i] != verify[i]:
-                        print(hex(i) + ': ' + hex(data[i]) + ' vs ' + hex(verify[i]))
+                        print hex(i) + ': ' + hex(data[i]) + ' vs ' + hex(verify[i])
 
         if not conf['write'] and conf['read']:
             rdata = cmd.readMemory(conf['address'], conf['len'])
+#            file(conf['fname'], 'wb').write(rdata)
             file(args[0], 'wb').write(''.join(map(chr,rdata)))
 
+#    cmd.cmdGo(addr + 0x04)
     finally:
         cmd.releaseChip()
 

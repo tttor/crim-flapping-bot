@@ -25,12 +25,12 @@
  *****************************************************************************/
 
 /**
- * @file libmaple/pwr.c
+ * @file pwr.c
  * @brief Power control (PWR) support.
  */
 
-#include <libmaple/pwr.h>
-#include <libmaple/rcc.h>
+#include "pwr.h"
+#include "rcc.h"
 
 /**
  * Enables the power interface clock, and resets the power device.

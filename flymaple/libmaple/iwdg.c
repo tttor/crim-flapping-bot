@@ -25,11 +25,11 @@
  *****************************************************************************/
 
 /**
- * @file libmaple/iwdg.c
+ * @file iwdg.c
  * @brief Independent watchdog (IWDG) support
  */
 
-#include <libmaple/iwdg.h>
+#include "iwdg.h"
 
 /**
  * @brief Initialise and start the watchdog

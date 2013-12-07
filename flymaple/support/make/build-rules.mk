@@ -1,16 +1,15 @@
 # Useful tools
-CROSS_COMPILE ?= arm-none-eabi-
-
-CC       := $(CROSS_COMPILE)gcc
-CXX      := $(CROSS_COMPILE)g++
-LD       := $(CROSS_COMPILE)ld -v
-AR       := $(CROSS_COMPILE)ar
-AS       := $(CROSS_COMPILE)gcc
-OBJCOPY  := $(CROSS_COMPILE)objcopy
-DISAS    := $(CROSS_COMPILE)objdump
-OBJDUMP  := $(CROSS_COMPILE)objdump
-SIZE     := $(CROSS_COMPILE)size
+CC       := arm-none-eabi-gcc
+CXX      := arm-none-eabi-g++
+LD       := arm-none-eabi-ld -v
+AR       := arm-none-eabi-ar
+AS       := arm-none-eabi-gcc
+OBJCOPY  := arm-none-eabi-objcopy
+DISAS    := arm-none-eabi-objdump
+OBJDUMP  := arm-none-eabi-objdump
+SIZE     := arm-none-eabi-size
 DFU      := dfu-util
+OPENOCD_WRAPPER  := support/scripts/openocd-wrapper.sh
 
 # Suppress annoying output unless V is set
 ifndef V
@@ -24,36 +23,29 @@ ifndef V
    SILENT_OBJDUMP  = @echo '  [OBJDUMP]  ' $(OBJDUMP);
 endif
 
-# Extra build configuration
-
 BUILDDIRS :=
 TGT_BIN   :=
 
 CFLAGS   = $(GLOBAL_CFLAGS) $(TGT_CFLAGS)
 CXXFLAGS = $(GLOBAL_CXXFLAGS) $(TGT_CXXFLAGS)
 ASFLAGS  = $(GLOBAL_ASFLAGS) $(TGT_ASFLAGS)
+CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 
-# Hacks to determine extra libraries we need to link against based on
-# the toolchain. The default specifies no extra libraries, but it can
-# be overridden.
-LD_TOOLCHAIN_PATH := $(LDDIR)/toolchains/generic
-ifneq ($(findstring ARM/embedded,$(shell $(CC) --version)),)
-# GCC ARM Embedded, https://launchpad.net/gcc-arm-embedded/
-LD_TOOLCHAIN_PATH := $(LDDIR)/toolchains/gcc-arm-embedded
+ifdef IDE_VS
+VS_TRIM_ERRORS = 2>&1 | sed -e 's/\(\w\+\):\([0-9]\+\):/\1(\2):/'
+else
+VS_TRIM_ERRORS =
 endif
-ifneq ($(findstring Linaro GCC,$(shell $(CC) --version)),)
-# Summon/Linaro GCC ARM Embedded, https://github.com/esden/summon-arm-toolchain
-LD_TOOLCHAIN_PATH := $(LDDIR)/toolchains/gcc-arm-embedded
-endif
-# Add toolchain directory to LD search path
-TOOLCHAIN_LDFLAGS := -L $(LD_TOOLCHAIN_PATH)
 
 # General directory independent build rules, generate dependency information
+	#$(SILENT_CC) $(CC) $(CFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $<
 $(BUILD_PATH)/%.o: %.c
-	$(SILENT_CC) $(CC) $(CFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $<
+	$(SILENT_CC) $(CC) $(CFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $(abspath $<) $(VS_TRIM_ERRORS)
 
+#$(SILENT_CXX) $(CXX) $(CFLAGS) $(CXXFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $<
 $(BUILD_PATH)/%.o: %.cpp
-	$(SILENT_CXX) $(CXX) $(CFLAGS) $(CXXFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $<
+	$(SILENT_CXX) $(CXX) $(CFLAGS) $(CXXFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $(abspath $<) $(VS_TRIM_ERRORS)
 
+#$(SILENT_AS) $(AS) $(ASFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $<
 $(BUILD_PATH)/%.o: %.S
-	$(SILENT_AS) $(AS) $(ASFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $<
+	$(SILENT_AS) $(AS) $(ASFLAGS) -MMD -MP -MF $(@:%.o=%.d) -MT $@ -o $@ -c $(abspath $<) $(VS_TRIM_ERRORS)

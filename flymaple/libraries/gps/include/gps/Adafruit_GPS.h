@@ -20,8 +20,9 @@ All text above must be included in any redistribution
 #ifndef _ADAFRUIT_GPS_H
 #define _ADAFRUIT_GPS_H
 
-#include <cstring>
-#include <cctype>
+#include "cstring"
+#include "cctype"
+#include "stdint.h" // for uint16_t, uint8_t, etc
 
 //#include <lexical_cast.hpp>
 
@@ -284,22 +285,15 @@ boolean Adafruit_GPS::parse(char *nmea) {
 }
 
 char Adafruit_GPS::read(void) {
-  SerialUSB.println("reading...");
-
   char c = 0;
 
   if (paused) return c;
 
   if(!gpsHwSerial->available()) {
-    SerialUSB.println("!gpsHwSerial->available()");
     return c;
-  } else {
-    SerialUSB.println("gpsHwSerial->available()");
   }
-  c = gpsHwSerial->read();
 
-  SerialUSB.print(c);
-  SerialUSB.println("");
+  c = gpsHwSerial->read();
 
   if (c == '$') {
     currentline[lineidx] = 0;
@@ -316,9 +310,6 @@ char Adafruit_GPS::read(void) {
       lastline = line2;
     }
 
-    //Serial.println("----");
-    //Serial.println((char *)lastline);
-    //Serial.println("----");
     lineidx = 0;
     recvdflag = true;
   }
@@ -376,7 +367,6 @@ void Adafruit_GPS::sendCommand(char *str) {
 }
 
 boolean Adafruit_GPS::newNMEAreceived(void) {
-  SerialUSB.println("newNMEAreceived(void)");
   return recvdflag;
 }
 

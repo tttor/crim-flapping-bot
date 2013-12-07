@@ -22,7 +22,7 @@
  */
 
 #include <stdlib.h>
-#include <wirish/wirish_math.h>
+#include "math.h"
 
 void randomSeed(unsigned int seed) {
     if (seed != 0) {

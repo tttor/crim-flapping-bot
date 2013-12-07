@@ -27,10 +27,14 @@
 #ifndef _SERVO_H_
 #define _SERVO_H_
 
-#include <libmaple/libmaple_types.h>
-#include <libmaple/timer.h>
+#include "libmaple_types.h"
+#include "timer.h"
 
-#include <wirish/wirish_types.h>
+#include "wirish_types.h"
+
+#ifdef MAPLE_IDE
+#include "wirish.h"             /* hack for IDE compile */
+#endif
 
 /*
  * Note on Arduino compatibility:

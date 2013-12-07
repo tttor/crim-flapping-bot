@@ -2,7 +2,6 @@
  * The MIT License
  *
  * Copyright (c) 2010 Perry Hung.
- * Copyright (c) 2011, 2012 LeafLabs, LLC.
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -26,23 +25,21 @@
  *****************************************************************************/
 
 /**
- * @file wirish/pwm.cpp
- * @brief Wiring-style pwmWrite().
+ *  @brief Arduino-style PWM implementation.
  */
 
-#include <wirish/pwm.h>
+#include "pwm.h"
 
-#include <libmaple/libmaple_types.h>
-#include <libmaple/timer.h>
+#include "libmaple_types.h"
+#include "timer.h"
 
-#include <wirish/boards.h>
+#include "boards.h"
 
 void pwmWrite(uint8 pin, uint16 duty_cycle) {
-    if (pin >= BOARD_NR_GPIO_PINS) {
+    timer_dev *dev = PIN_MAP[pin].timer_device;
+    if (pin >= BOARD_NR_GPIO_PINS || dev == NULL || dev->type == TIMER_BASIC) {
         return;
     }
-    timer_dev *dev = PIN_MAP[pin].timer_device;
-    uint8 cc_channel = PIN_MAP[pin].timer_channel;
-    ASSERT(dev && cc_channel);
-    timer_set_compare(dev, cc_channel, duty_cycle);
+
+    timer_set_compare(dev, PIN_MAP[pin].timer_channel, duty_cycle);
 }

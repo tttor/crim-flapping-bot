@@ -1,54 +1,112 @@
-# TARGET_FLAGS are to be passed while compiling, assembling, linking.
-TARGET_FLAGS :=
-# TARGET_LDFLAGS go to the linker
-TARGET_LDFLAGS :=
+# Board-specific configuration values.  Flash and SRAM sizes in bytes.
 
-# Configuration derived from $(MEMORY_TARGET)
+ifeq ($(BOARD), maple)
+   MCU := STM32F103RB
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOA
+   ERROR_LED_PIN  := 5
+   DENSITY := STM32_MEDIUM_DENSITY
+   FLASH_SIZE := 131072
+   SRAM_SIZE := 20480
+endif
 
-LD_SCRIPT_PATH := $(LDDIR)/$(MEMORY_TARGET).ld
+ifeq ($(BOARD), maple_native)
+   MCU := STM32F103ZE
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOC
+   ERROR_LED_PIN  := 15
+   DENSITY := STM32_HIGH_DENSITY
+   FLASH_SIZE := 524288
+   SRAM_SIZE := 65536
+endif
+
+ifeq ($(BOARD), maple_mini)
+   MCU := STM32F103CB
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOC
+   ERROR_LED_PIN  := 1
+   DENSITY := STM32_MEDIUM_DENSITY
+   FLASH_SIZE := 131072
+   SRAM_SIZE := 20480
+endif
+
+ifeq ($(BOARD), maple_RET6)
+   MCU := STM32F103RE
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOA
+   ERROR_LED_PIN := 5
+   DENSITY := STM32_HIGH_DENSITY
+   FLASH_SIZE := 524288
+   SRAM_SIZE := 65536
+endif
+
+ifeq ($(BOARD), aeroquad32f1)
+   MCU := STM32F103VE
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOE
+   ERROR_LED_PIN  := 5
+   DENSITY := STM32_HIGH_DENSITY
+   FLASH_SIZE := 524288
+   SRAM_SIZE := 65536
+   MCU_FAMILY := STM32F1
+endif
+
+ifeq ($(BOARD), aeroquad32)
+   MCU := STM32F406VG
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOE
+   ERROR_LED_PIN  := 5
+   DENSITY := STM32_HIGH_DENSITY
+   FLASH_SIZE := 524288
+   SRAM_SIZE := 65536
+   MCU_FAMILY := STM32F2
+endif
+
+ifeq ($(BOARD), aeroquad32mini)
+   MCU := STM32F103CB
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOB
+   ERROR_LED_PIN  := 1
+   DENSITY := STM32_MEDIUM_DENSITY
+   FLASH_SIZE := 131072
+   SRAM_SIZE := 20480
+   MCU_FAMILY := STM32F1
+endif
+
+ifeq ($(BOARD), freeflight)
+   MCU := STM32F103CB
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOB
+   ERROR_LED_PIN  := 3
+   DENSITY := STM32_MEDIUM_DENSITY
+   FLASH_SIZE := 131072
+   SRAM_SIZE := 20480
+   MCU_FAMILY := STM32F1
+endif
+
+ifeq ($(BOARD), discovery_f4)
+   MCU := STM32F406VG
+   PRODUCT_ID := 0003
+   ERROR_LED_PORT := GPIOD
+   ERROR_LED_PIN  := 14
+   DENSITY := STM32_HIGH_DENSITY
+   FLASH_SIZE := 524288
+   SRAM_SIZE := 65536
+   MCU_FAMILY := STM32F2
+endif
+
+
+# Memory target-specific configuration values
 
 ifeq ($(MEMORY_TARGET), ram)
-VECT_BASE_ADDR := VECT_TAB_RAM
+   LDSCRIPT := $(BOARD)/ram.ld
+   VECT_BASE_ADDR := VECT_TAB_RAM
 endif
 ifeq ($(MEMORY_TARGET), flash)
-VECT_BASE_ADDR := VECT_TAB_FLASH
+   LDSCRIPT := $(BOARD)/flash.ld
+   VECT_BASE_ADDR := VECT_TAB_FLASH
 endif
 ifeq ($(MEMORY_TARGET), jtag)
-VECT_BASE_ADDR := VECT_TAB_BASE
+   LDSCRIPT := $(BOARD)/jtag.ld
+   VECT_BASE_ADDR := VECT_TAB_BASE
 endif
-
-# Pull in the board configuration file here, so it can override the
-# above.
-
-include $(BOARD_INCLUDE_DIR)/$(BOARD).mk
-
-# Configuration derived from $(BOARD).mk
-
-LD_SERIES_PATH := $(LDDIR)/stm32/series/$(MCU_SERIES)
-LD_MEM_PATH := $(LDDIR)/stm32/mem/$(LD_MEM_DIR)
-ifeq ($(MCU_SERIES), stm32f1)
-# Due to the Balkanization on F1, we need to specify the line when
-# making linker decisions.
-LD_SERIES_PATH := $(LD_SERIES_PATH)/$(MCU_F1_LINE)
-endif
-
-ifeq ($(MCU_SERIES), stm32f1)
-TARGET_FLAGS += -mcpu=cortex-m3 -march=armv7-m
-endif
-ifeq ($(MCU_SERIES), stm32f2)
-TARGET_FLAGS += -mcpu=cortex-m3 -march=armv7-m
-endif
-ifeq ($(MCU_SERIES), stm32f4)
-TARGET_FLAGS += -mcpu=cortex-m4 -march=armv7e-m -mfloat-abi=hard -mfpu=fpv4-sp-d16
-endif
-
-TARGET_LDFLAGS += -Xlinker -T$(LD_SCRIPT_PATH) \
-                  -L $(LD_SERIES_PATH) \
-                  -L $(LD_MEM_PATH) \
-                  -L $(LDDIR)
-TARGET_FLAGS += -mthumb -DBOARD_$(BOARD) -DMCU_$(MCU) \
-                -DERROR_LED_PORT=$(ERROR_LED_PORT) \
-                -DERROR_LED_PIN=$(ERROR_LED_PIN) \
-                -D$(VECT_BASE_ADDR)
-
-LIBMAPLE_MODULE_SERIES := $(LIBMAPLE_PATH)/$(MCU_SERIES)

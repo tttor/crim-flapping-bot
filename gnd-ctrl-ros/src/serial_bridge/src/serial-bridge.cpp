@@ -58,10 +58,12 @@ class SerialBridge {
     id = data.content.at(0).at(0);
 
     if (id=="GPS") {
-      int8_t status;
+      int8_t status = 0;
       status = boost::lexical_cast<int8_t>(data.content.at(5).at(0));
 
-      if (status) {
+      if (status == 1) { // Fix
+        ROS_DEBUG("GPS data received, with FIX");
+
         sensor_msgs::NavSatFix gps_data;
         gps_data.status.status = sensor_msgs::NavSatStatus::STATUS_FIX;
         gps_data.latitude = crim::Helper::convert_dms_to_dec(data.content.at(3).at(0), data.content.at(3).at(1));
@@ -69,6 +71,8 @@ class SerialBridge {
         gps_data.altitude = boost::lexical_cast<double>(data.content.at(3).at(4));
 
         gps_data_pub_.publish(gps_data);
+      } else {
+        ROS_DEBUG("GPS data received, but NO FIX");
       }
     }
   }

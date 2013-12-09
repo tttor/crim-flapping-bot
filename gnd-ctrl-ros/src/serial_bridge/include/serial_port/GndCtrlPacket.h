@@ -79,29 +79,30 @@ size_t GndCtrlPacket::receive() {
       status = NONSENSE_DATA;
 
     // check 2: checksum!
-    if (status == HAPPY) {
-      //
-      string r_checksum;
-      r_checksum = packet_.substr(packet_.length()-checksum_length_);
+    // For now (Dec 9, 2013), we rely on the built-in checksum on zigbee/xbee
+    //if (status == HAPPY) {
+      ////
+      //string r_checksum;
+      //r_checksum = packet_.substr(packet_.length()-checksum_length_);
 
-      //
-      hashwrapper *h = new md5wrapper();
-      h->test();
+      ////
+      //hashwrapper *h = new md5wrapper();
+      //h->test();
 
-      std::string header_plus_data;
-      header_plus_data = packet_.substr(0, packet_.length()-checksum_length_);
+      //std::string header_plus_data;
+      //header_plus_data = packet_.substr(0, packet_.length()-checksum_length_);
 
-      std::string c_checksum;
-      c_checksum = h->getHashFromString(header_plus_data);
+      //std::string c_checksum;
+      //c_checksum = h->getHashFromString(header_plus_data);
 
-      delete h;
+      //delete h;
 
-      //
-      if (c_checksum != r_checksum)
-        status = CHECKSUM_MISMATCH;
-      else
-        packet_ = packet_.substr(0,packet_.length()-checksum_length_); // remove checksum
-    }
+      ////
+      //if (c_checksum != r_checksum)
+        //status = CHECKSUM_MISMATCH;
+      //else
+        //packet_ = packet_.substr(0,packet_.length()-checksum_length_); // remove checksum
+    //}
   } catch(boost::system::system_error& e) {
       cerr << "Error: " << e.what() << endl;
       status = TIMEOUT;
@@ -110,8 +111,7 @@ size_t GndCtrlPacket::receive() {
   return status;
 }
 
-crim::StringData
-GndCtrlPacket::unwrap(){
+crim::StringData GndCtrlPacket::unwrap(){
   using namespace std;
 
   crim::StringData data;

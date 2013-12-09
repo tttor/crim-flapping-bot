@@ -1,6 +1,6 @@
 // @author vektor dewanto
 #ifndef FLYMAPLE_PACKET_H
-#define	FLYMAPLE_PACKET_H
+#define FLYMAPLE_PACKET_H
 
 #include <string>
 #include <packet/packet.h>
@@ -34,11 +34,11 @@ class FlymaplePacket: public Packet {
     @brief
   */
   void wrap(const StringData& data);
-  
+
  private:
   size_t port_;
   size_t baud_;
-  
+
   bool send_SerialUSB();
   bool send_SerialX();
 };
@@ -77,7 +77,7 @@ bool FlymaplePacket::send_SerialUSB() {
 bool FlymaplePacket::send_SerialX() {
   for (size_t i=0; i<packet_.length(); ++i) {
     char c = packet_[i];
-    
+
     switch (port_) {
       case SERIAL_1: {
         Serial1.write(c);
@@ -103,29 +103,29 @@ void FlymaplePacket::wrap(const StringData& data) {
   //
   std::string f_data;// f(ormatted)_data
   size_t n_field = data.content.size();
-  
+
   for(size_t i=0; i<n_field; ++i) {
     size_t n_subfield = data.content.at(i).size();
     for(size_t j=0; j<n_subfield; ++j) {
       f_data += data.content.at(i).at(j);
-      
-      if(j != n_subfield-1) 
+
+      if(j != n_subfield-1)
         f_data += data_subfield_delimiter_;
     }
-    if(i != n_field-1) 
+    if(i != n_field-1)
         f_data += data_field_delimiter_;
   }
 
-  //
-  hashwrapper* h = new md5wrapper();
-  h->test();
-  
+  // For now (Dec 9, 2013), we rely on the built-in checksum on zigbee/xbee
+  //hashwrapper* h = new md5wrapper();
+  //h->test();
+
   std::string checksum;
-  checksum = h->getHashFromString(f_data);
-  
-  //  
+  //checksum = h->getHashFromString(f_data);
+
+  //
   wrap_final(f_data, checksum);
-  delete h;
+  //delete h;
 }
 
 }// namespace crim

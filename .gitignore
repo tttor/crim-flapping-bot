@@ -19,7 +19,6 @@
 *CMakeCache*
 *cmake*
 *.bin
-*Makefile*
 *CMakeCCompilerId.c
 *CMakeCXXCompilerId.cpp
 *TargetDirectories.txt
@@ -29,6 +28,7 @@
 *depend.internal
 *.cpp.o
 *link.txt
+*CMakeFiles*
 
 # built lib
 *.a

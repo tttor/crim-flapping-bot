@@ -132,6 +132,7 @@ sketch: build-check MSG_INFO $(BUILD_PATH)/$(BOARD).bin
 
 clean:
 	rm -rf build
+	rm -rf common
 
 mrproper: clean
 	rm -rf doxygen

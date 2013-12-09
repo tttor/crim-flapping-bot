@@ -1,6 +1,12 @@
 Some nice guidance:
 
 ===
+Put these in your .bashrc, e.g.
+
+source /opt/ros/hydro/setup.bash
+source /home/tor/robotics/prj/008/crim-flapping-bot/gnd-ctrl-ros/devel/setup.bash
+
+===
 Verbosity Levels [http://wiki.ros.org/Verbosity%20Levels]
 
 DEBUG
@@ -17,8 +23,8 @@ Small amounts of information that may be useful to a user. Examples:
 WARN
 Information that the user may find alarming, and may affect the output of the application, but is part of the expected working of the system. Examples:
 "Could not load configuration file from <path>. Using defaults."
-ERROR
 
+ERROR
 Something serious (but recoverable) has gone wrong. Examples:
 "Haven't received an update on topic X for 10 seconds. Stopping robot until X continues broadcasting."
 "Received unexpected NaN value in transform X. Skipping..."

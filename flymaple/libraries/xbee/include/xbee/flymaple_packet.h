@@ -75,25 +75,21 @@ bool FlymaplePacket::send_SerialUSB() {
 }
 
 bool FlymaplePacket::send_SerialX() {
-  for (size_t i=0; i<packet_.length(); ++i) {
-    char c = packet_[i];
-
-    switch (port_) {
-      case SERIAL_1: {
-        Serial1.write(c);
-        break;
-      }
-      case SERIAL_2: {
-        Serial2.write(c);
-        break;
-      }
-      case SERIAL_3: {
-        Serial3.write(c);
-        break;
-      }
-      default: {
-        return false;
-      }
+  switch (port_) {
+    case SERIAL_1: {
+      Serial1.println(packet_.c_str());
+      break;
+    }
+    case SERIAL_2: {
+      Serial2.println(packet_.c_str());
+      break;
+    }
+    case SERIAL_3: {
+      Serial3.println(packet_.c_str());
+      break;
+    }
+    default: {
+      return false;
     }
   }
   return true;

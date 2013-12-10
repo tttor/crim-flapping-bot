@@ -16,10 +16,10 @@
 *flymaple/main.cpp
 
 # temporary CMake files
+gnd-ctrl/CMakeFiles/
 *CMakeCache*
 *cmake*
 *.bin
-*Makefile*
 *CMakeCCompilerId.c
 *CMakeCXXCompilerId.cpp
 *TargetDirectories.txt

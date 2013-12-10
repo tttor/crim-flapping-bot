@@ -1,5 +1,7 @@
 #include "helper/helper.hpp"
 
+using namespace crim;
+
 double Helper::convert_dms_to_dec(const std::string& dms, const std::string& dir) {
   const size_t N_MINUTE_DIGIT = 8;// including the point
 
@@ -17,4 +19,3 @@ double Helper::convert_dms_to_dec(const std::string& dms, const std::string& dir
 
   return dec;
 }
-

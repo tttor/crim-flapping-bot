@@ -90,20 +90,31 @@ catkin_package(
 ###########
 ## Build ##
 ###########
+set(CRIM-FLAPPING-BOT_COMMON_PATH ../../../common)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  ../../../common/include
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/packet/include
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/include
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/helper/include
 )
 
 ## Declare a cpp library
-add_library(timeout_serial
+add_library(serial_port
   src/serial_port/TimeoutSerial.cpp
   src/serial_port/hl_md5wrapper.cpp
   src/serial_port/hl_md5.cpp
+  src/serial_port/GndCtrlPacket.cpp
+)
+
+add_library(common
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/packet/src/packet.cpp
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/src/string_data.cpp
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/src/gps_data.cpp
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/helper/src/helper.cpp
 )
 
 ## Declare a cpp executable
@@ -115,8 +126,9 @@ add_dependencies(serial_bridge serial_bridge_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(serial_bridge
- ${catkin_LIBRARIES}
- timeout_serial
+  ${catkin_LIBRARIES}
+  serial_port
+  common
 )
 
 #############

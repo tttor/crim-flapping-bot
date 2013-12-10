@@ -1,14 +1,19 @@
-#include "stdlib.h" // for Adafruit_GPS lib, and this _must_ be on top of all #include
-#include "wirish.h"
-#include "gps/Adafruit_GPS.h"
+#include <stdlib.h> // for Adafruit_GPS lib, and this _must_ be on top of all #include
 
+#include "wirish.h"
+
+#include "gps/Adafruit_GPS.h"
+#include "xbee/flymaple_packet.h"
+#include "data-format/gps_data.h"
+
+static const int SERIAL2_BAUD_RATE = 9600;
 static size_t TIMER_PERIODE = 1000; // in microseconds
 
 HardwareTimer timer(2);
 Adafruit_GPS GPS(&Serial1);
 
 void timer_int_handler(void) {
-    GPS.read();
+  GPS.read();
 }
 
 void setup_timer_int() {
@@ -38,9 +43,9 @@ void setup()
   GPS.begin(9600);
 
   // uncomment this line to turn on RMC (recommended minimum) and GGA (fix data) including altitude
-  //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
   // uncomment this line to turn on only the "minimum recommended" data for high update rates!
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
+  //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
   // uncomment this line to turn on all the available data - for 9600 baud you'll want 1 Hz rate
   //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_ALLDATA);
 
@@ -60,6 +65,11 @@ void setup()
 
 void loop()
 {
+  //// Using this, instead of timer_interrupt
+  //if (Serial1.available()) {
+    //GPS.read();
+  //}
+
   // if a sentence is received, we can check the checksum, parse it...
   if (GPS.newNMEAreceived()) {
     // a tricky thing here is if we print the NMEA sentence, or data
@@ -72,30 +82,17 @@ void loop()
       return;// continue;  // we can fail to parse a sentence in which case we should just wait for another
     }
     else {
-      SerialUSB.print("\nTime: ");
-      SerialUSB.print(GPS.hour, DEC); SerialUSB.print(':');
-      SerialUSB.print(GPS.minute, DEC); SerialUSB.print(':');
-      SerialUSB.print(GPS.seconds, DEC); SerialUSB.print('.');
-      SerialUSB.println(GPS.milliseconds);
+      // Format the data
+      crim::GPSData gps_data;
+      gps_data.set_time(GPS.hour, GPS.minute, GPS.seconds, GPS.milliseconds);
+      gps_data.set_date(GPS.year, GPS.month, GPS.day);
+      gps_data.set_pose(GPS.latitude, GPS.lat, GPS.longitude, GPS.lon, GPS.altitude);
+      gps_data.set_misc(GPS.speed, GPS.angle);
+      gps_data.set_note(GPS.fix, GPS.fixquality, GPS.satellites);
 
-      SerialUSB.print("Date: ");
-      SerialUSB.print(GPS.day, DEC); SerialUSB.print('/');
-      SerialUSB.print(GPS.month, DEC); SerialUSB.print('/');
-      SerialUSB.print("20"); SerialUSB.println(GPS.year, DEC);
-
-      SerialUSB.print("Fix: "); SerialUSB.print((int)GPS.fix);
-      SerialUSB.print(" quality: "); SerialUSB.println((int)GPS.fixquality);
-      if (GPS.fix) {
-        SerialUSB.print("Location: ");
-        SerialUSB.print(GPS.latitude, 4); SerialUSB.print(GPS.lat);
-        SerialUSB.print(", ");
-        SerialUSB.print(GPS.longitude, 4); SerialUSB.println(GPS.lon);
-
-        SerialUSB.print("Speed (knots): "); SerialUSB.println(GPS.speed);
-        SerialUSB.print("Angle: "); SerialUSB.println(GPS.angle);
-        SerialUSB.print("Altitude: "); SerialUSB.println(GPS.altitude);
-        SerialUSB.print("Satellites: "); SerialUSB.println((int)GPS.satellites);
-      }
+      crim::FlymaplePacket packet("Serial2", SERIAL2_BAUD_RATE);
+      packet.wrap(gps_data);
+      packet.send();
     }
   }
   else {

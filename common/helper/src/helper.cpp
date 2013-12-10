@@ -1,20 +1,4 @@
-#ifndef HELPER_H
-#define HELPER_H
-
-#include <boost/lexical_cast.hpp>
-
-namespace crim {
-
-class Helper {
- public:
-  /**
-    @brief Decimal Degrees = Degrees + minutes/60 + seconds/3600
-    See: http://andrew.hedges.name/experiments/convert_lat_long/
-  */
-  static double convert_dms_to_dec(const std::string& dms, const std::string& dir);
-
- private:
-};
+#include "helper/helper.hpp"
 
 double Helper::convert_dms_to_dec(const std::string& dms, const std::string& dir) {
   const size_t N_MINUTE_DIGIT = 8;// including the point
@@ -34,6 +18,3 @@ double Helper::convert_dms_to_dec(const std::string& dms, const std::string& dir
   return dec;
 }
 
-}// namespace crim
-
-#endif

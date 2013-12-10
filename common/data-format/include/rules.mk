@@ -2,15 +2,15 @@
 sp := $(sp).x
 dirstack_$(sp) := $(d)
 d := $(dir)
-BUILDDIRS += $(BUILD_PATH)/$(d)
+BUILDDIRS += $(BUILD_PATH)/$(d)/../src
 
 # Local flags
 CFLAGS_$(d) := $(WIRISH_INCLUDES) $(LIBMAPLE_INCLUDES)
 
 # Local rules and targets
 cSRCS_$(d) :=
-
-cppSRCS_$(d) := 
+cppSRCS_$(d) := ../src/string_data.cpp \
+                ../src/gps_data.cpp
 
 cFILES_$(d) := $(cSRCS_$(d):%=$(d)/%)
 cppFILES_$(d) := $(cppSRCS_$(d):%=$(d)/%)

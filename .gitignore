@@ -11,6 +11,8 @@
 
 # build output:
 */build/*
+flymaple/common/
+flymaple/build/
 
 # the main-and-hot file for flymaple programming
 *flymaple/main.cpp

@@ -1,32 +1,8 @@
-// @author vektor dewanto
-#ifndef GPS_DATA_H
-#define	GPS_DATA_H
+#include "data-format/gps_data.h"
 
-#include <string>
-#include <stdio.h> // for snprintf()
-
-#include <data-format/string_data.h>
-
+using namespace crim;
 using namespace std;
 
-namespace crim{
-
-static const int BUFFER_CAPACITY = 100;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-// DECLARATION
-struct GPSData: public StringData {
-  GPSData();
-  ~GPSData();
-
-  void set_time(uint8_t hour, uint8_t minute, uint8_t second, uint16_t millisecond);
-  void set_date(uint8_t year, uint8_t month, uint8_t day);
-  void set_pose(float latitude, char lat, float longitude, char lon, float altitude);
-  void set_misc(float angle, float speed);
-  void set_note(boolean fix, uint8_t fixquality, uint8_t n_satellite);
-};
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IMPLEMENTATION
 GPSData::GPSData() {
   content.resize(6);// 0->id, 1->time, 2->date, 3->pose, 4->misc, 5-note
   content.at(0).push_back("GPS");// data id
@@ -36,7 +12,7 @@ GPSData::~GPSData() {
   // nothing
 }
 
-void GPSData::set_note(boolean fix, uint8_t fixquality, uint8_t n_satellite) {
+void GPSData::set_note(bool fix, uint8_t fixquality, uint8_t n_satellite) {
   vector<uint8_t> argv;
   argv.push_back((uint8_t)fix);
   argv.push_back(fixquality);
@@ -179,6 +155,3 @@ void GPSData::set_time(uint8_t hour, uint8_t minute, uint8_t second, uint16_t mi
   //
   content.at(1) = field;
 };
-
-}// namespace crim
-#endif

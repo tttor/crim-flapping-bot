@@ -88,7 +88,8 @@ LIBMAPLE_MODULES += $(SRCROOT)/libraries/Wire
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/FreeRTOS
 
 # crim-flapping-bot libraries:
-LIBMAPLE_MODULES += $(CRIM-FLAPPING-BOT_COMMON_PATH)/include
+LIBMAPLE_MODULES += $(CRIM-FLAPPING-BOT_COMMON_PATH)/data-format/include
+LIBMAPLE_MODULES += $(CRIM-FLAPPING-BOT_COMMON_PATH)/packet/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/rc/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/sensor/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/gps/include
@@ -132,6 +133,7 @@ sketch: build-check MSG_INFO $(BUILD_PATH)/$(BOARD).bin
 
 clean:
 	rm -rf build
+	rm -rf common
 
 mrproper: clean
 	rm -rf doxygen

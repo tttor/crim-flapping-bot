@@ -16,6 +16,7 @@
 *flymaple/main.cpp
 
 # temporary CMake files
+gnd-ctrl/CMakeFiles/
 *CMakeCache*
 *cmake*
 *.bin
@@ -28,7 +29,6 @@
 *depend.internal
 *.cpp.o
 *link.txt
-*CMakeFiles*
 
 # built lib
 *.a

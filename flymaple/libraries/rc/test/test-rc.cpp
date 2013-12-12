@@ -2,7 +2,6 @@
 // This sends back what is received
 
 #include "wirish.h"
-
 #include "rc/rc_capture.h"
 
 // Force init() to be called before anything else.
@@ -11,8 +10,6 @@ __attribute__((constructor)) void premain() {
 }
 
 int main(void) {
-  
-	using namespace crim;
 	
   RC_Capture RC;
   

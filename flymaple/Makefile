@@ -90,6 +90,7 @@ LIBMAPLE_MODULES += $(SRCROOT)/libraries/FreeRTOS
 # crim-flapping-bot libraries:
 LIBMAPLE_MODULES += $(CRIM-FLAPPING-BOT_COMMON_PATH)/data-format/include
 LIBMAPLE_MODULES += $(CRIM-FLAPPING-BOT_COMMON_PATH)/packet/include
+LIBMAPLE_MODULES += $(CRIM-FLAPPING-BOT_COMMON_PATH)/matrix/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/rc/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/sensor/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/gps/include

@@ -1,7 +1,7 @@
 // Unit test: Xbee
 // This sends back what is received
 
-#include <wirish/wirish.h>
+#include "wirish/wirish.h"
 
 static const int BAUD_RATE = 9600;
 

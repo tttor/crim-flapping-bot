@@ -5,8 +5,7 @@
 // Communicates over SerialUSB.
 
 #include <string.h>
-
-#include <wirish/wirish.h>
+#include "wirish/wirish.h"
 
 // ASCII escape character
 #define ESC       ((uint8)27)

@@ -1,8 +1,8 @@
 // Test packet 
-#include <wirish/wirish.h>
+#include "wirish/wirish.h"
 
-#include <xbee/flymaple_packet.h>
-#include <data-format/gps_data.h>
+#include "xbee/flymaple_packet.h"
+#include "data-format/gps_data.h"
 
 static const int BAUD_RATE = 9600;
 
@@ -55,7 +55,7 @@ int main(void) {
   gps_data.set_note(fix, fixquality, satellites);
   
   //
-  FlymaplePacket packet("SerialUSB", BAUD_RATE);
+  FlymaplePacket packet("Serial3", BAUD_RATE);
   
   while (true) {
     packet.wrap(gps_data);

@@ -27,8 +27,8 @@ class RadioControl {
   */  
   uint16 read(uint8_t ch);
 
-  static const uint16_t kPPMTresholdBelow;
-  static const uint16_t kPPMTresholdAbove;
+  static const uint16_t kPPMThresholdBelow;
+  static const uint16_t kPPMThresholdAbove;
   
  private:
   void set_ch_PPM(const uint8_t& pin, uint16_t* ch_begin, uint16_t* ch_end, uint16_t* ch_PPM);

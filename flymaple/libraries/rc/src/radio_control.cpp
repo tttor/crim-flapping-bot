@@ -2,8 +2,8 @@
 
 using namespace crim;
 
-const uint16_t RadioControl::kPPMTresholdBelow = 950;
-const uint16_t RadioControl::kPPMTresholdAbove = 2000;
+const uint16_t RadioControl::kPPMThresholdBelow = 950;
+const uint16_t RadioControl::kPPMThresholdAbove = 2000;
   
 std::vector<uint16_t> RadioControl::ch_PPMs_ = std::vector<uint16_t>();
 std::vector<uint16_t> RadioControl::ch_begins_ = std::vector<uint16_t>();
@@ -53,7 +53,7 @@ void RadioControl::set_ch_PPM(const uint8_t& pin, uint16_t* ch_begin, uint16_t* 
       *ch_end = micros();
       delta = *ch_end - *ch_begin;
       
-      if((delta > kPPMTresholdBelow) && (delta < kPPMTresholdAbove)) {
+      if((delta > kPPMThresholdBelow) && (delta < kPPMThresholdAbove)) {
         *ch_PPM = delta;
       }
       

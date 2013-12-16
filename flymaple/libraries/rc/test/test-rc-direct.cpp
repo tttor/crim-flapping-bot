@@ -1,7 +1,6 @@
 // Unit test: RC
-// This sends back what is received
-
-#include <wirish/wirish.h>
+#include <stdint.h> // for uint16_t, uint8_t, etc
+#include "wirish.h"
 
 volatile uint16_t chan1PPM;
 volatile uint16_t chan1begin;

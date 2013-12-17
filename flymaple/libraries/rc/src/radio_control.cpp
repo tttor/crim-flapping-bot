@@ -4,7 +4,7 @@ using namespace crim;
 
 const uint16_t RadioControl::kPPMThresholdBelow = 1092;
 const uint16_t RadioControl::kPPMThresholdAbove = 1920;
-const uint16_t RadioControl::kPPMTolerance = 5;
+const uint16_t RadioControl::kPPMTolerance = 15;
   
 std::vector<uint16_t> RadioControl::ch_PPMs_ = std::vector<uint16_t>();
 std::vector<uint16_t> RadioControl::ch_begins_ = std::vector<uint16_t>();

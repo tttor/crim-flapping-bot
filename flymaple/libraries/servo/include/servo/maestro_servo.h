@@ -4,12 +4,14 @@
 
 #include <stdint.h> // for uint16_t, uint8_t, etc
 #include <vector>
+#include <map>
+#include <string>
 #include "wirish.h"
 
 namespace crim{
 class MaestroServo {
  public:
-  std::vector<uint16_t> star_poses;
+  std::map<std::string,uint16_t> star_poses;
   
   /**
    * @brief This uses Serial2 _only_ with baudrate= 9600
@@ -28,7 +30,7 @@ class MaestroServo {
   /**
    * @brief 
   */
-  void goto_star(uint16_t idx);
+  void goto_star(const std::string& tag);
   
   /**
    * @brief 
@@ -44,6 +46,16 @@ class MaestroServo {
    * @brief 
   */
   uint8_t get_addr();
+  
+  /**
+   * @brief 
+  */
+  uint16_t max_pos();
+  
+  /**
+   * @brief 
+  */
+  uint16_t min_pos();
   
  private:
   uint8_t addr_;

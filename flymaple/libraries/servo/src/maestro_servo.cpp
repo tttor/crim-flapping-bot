@@ -42,6 +42,14 @@ void MaestroServo::goto_min() {
   go_to(min_pos_);
 }
 
-void MaestroServo::goto_star(uint16_t idx) {
-  go_to(star_poses.at(idx));
+void MaestroServo::goto_star(const std::string& tag) {
+  go_to(star_poses[tag]);
+}
+
+uint16_t MaestroServo::max_pos() {
+  return max_pos_;
+}
+
+uint16_t MaestroServo::min_pos() {
+  return min_pos_;
 }

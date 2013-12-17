@@ -11,13 +11,13 @@ __attribute__((constructor)) void premain() {
 int main(void) {
   //////////////////////////////////////////////////////////////////////////////
   MaestroServo servo_1(0, 70, 180);
-  servo_1.star_poses.push_back(90);
+  servo_1.star_poses["straight_front"] = 90;
   
   while (true) {
     servo_1.goto_max();// fully upward
     delay(2000);
     
-    servo_1.goto_star(0);// straight to the front
+    servo_1.goto_star("straight_front");
     delay(2000);
     
     servo_1.goto_min();//  just-right downward

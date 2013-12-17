@@ -29,6 +29,7 @@ class RadioControl {
 
   static const uint16_t kPPMThresholdBelow;
   static const uint16_t kPPMThresholdAbove;
+  static const uint16_t kPPMTolerance;
   
  private:
   void set_ch_PPM(const uint8_t& pin, uint16_t* ch_begin, uint16_t* ch_end, uint16_t* ch_PPM);

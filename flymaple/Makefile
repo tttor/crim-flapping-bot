@@ -95,6 +95,7 @@ LIBMAPLE_MODULES += $(SRCROOT)/libraries/sensor/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/gps/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/xbee/include
 LIBMAPLE_MODULES += $(SRCROOT)/libraries/motor/include
+LIBMAPLE_MODULES += $(SRCROOT)/libraries/servo/include
 
 # Call each module's rules.mk:
 $(foreach m,$(LIBMAPLE_MODULES),$(eval $(call LIBMAPLE_MODULE_template,$(m))))

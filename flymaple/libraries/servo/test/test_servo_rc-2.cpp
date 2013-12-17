@@ -84,7 +84,7 @@ int main(void) {
     servo_1.go_to(pos);
     
     // Servo_2
-    uint16_t ch_3;
+    int32_t ch_3;
     ch_3 = rc.read(3) - ch_3_PPM_init;
     //SerialUSB.println(ch_3, DEC);
     

@@ -8,7 +8,7 @@ RCData::RCData(uint8_t n_ch) {
   content.at(0).push_back("RCS");// data id
   
   for (uint8_t i=1; i<content.size(); ++i) {
-    content.at(i).resize(2);// 0-> PPM, 1-> init_PPM
+    content.at(i).resize(2);// 0-> init_PPM, 1-> PPM
   }
 }
 
@@ -24,7 +24,7 @@ void RCData::set_init_PPMs(const std::vector<uint16_t>& init_PPMs) {
     status = snprintf(tmp, BUFFER_CAPACITY, "%d", init_PPMs.at(i));
     
     if ((status>0) && (status<=BUFFER_CAPACITY)) 
-      content.at(i+1).at(1) = tmp;
+      content.at(i+1).at(0) = tmp;
   }
 }
 
@@ -36,7 +36,7 @@ void RCData::set_PPMs(const std::vector<uint16_t>& PPMs) {
     status = snprintf(tmp, BUFFER_CAPACITY, "%d", PPMs.at(i));
     
     if ((status>0) && (status<=BUFFER_CAPACITY)) 
-      content.at(i+1).at(0) = tmp;
+      content.at(i+1).at(1) = tmp;
   }
 }
 

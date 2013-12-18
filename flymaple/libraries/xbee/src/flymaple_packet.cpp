@@ -36,15 +36,15 @@ bool FlymaplePacket::send_SerialUSB() {
 bool FlymaplePacket::send_SerialX() {
   switch (port_) {
     case SERIAL_1: {
-      Serial1.println(packet_.c_str());
+      Serial1.print(packet_.c_str());
       break;
     }
     case SERIAL_2: {
-      Serial2.println(packet_.c_str());
+      Serial2.print(packet_.c_str());
       break;
     }
     case SERIAL_3: {
-      Serial3.println(packet_.c_str());
+      Serial3.print(packet_.c_str());
       break;
     }
     default: {

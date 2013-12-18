@@ -22,8 +22,10 @@ size_t GndCtrlPacket::receive() {
     serial.setTimeout(boost::posix_time::seconds(timeout_));
 
     packet_ = serial.readStringUntil(packet_delimiter_);
+    cerr << "packet_= " << packet_ << endl;
+    
     serial.close();
-
+    
     // check 1
     if (packet_.length()<3)
       status = NONSENSE_DATA;

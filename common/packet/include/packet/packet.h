@@ -6,7 +6,7 @@
 
 namespace crim{
 
-static const std::string PACKET_DELIMITER = "";// the trailing \n is from SerialX.println()
+static const std::string PACKET_DELIMITER = "\n";// the trailing \n is from SerialX.println()
 static const std::string DATA_FIELD_DELIMITER = ",";
 static const std::string DATA_SUBFIELD_DELIMITER = ":";
 static const size_t CHECKSUM_LENGTH = 32;

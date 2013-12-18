@@ -8,7 +8,12 @@
 #include <data-format/string_data.h>
 #include <helper/helper.hpp>
 
+#include <serial_bridge/RCData.h>
+
 #include <sstream>
+#include <iostream>
+
+using namespace std;
 
 namespace crim {
 
@@ -16,8 +21,9 @@ class SerialBridge {
  public:
   SerialBridge(ros::NodeHandle nh): nh_(nh) {
     gps_data_pub_ = nh_.advertise<sensor_msgs::NavSatFix>("gps_data", 1000);
+    ch_1_rc_data_pub_ = nh_.advertise<serial_bridge::RCData>("rc_data", 1000);
+    
     packet_ = crim::GndCtrlPacket("/dev/ttyUSB0", 9600, 5);
-
     ROS_INFO("serial_bridge: up and running ;)");
   }
 
@@ -43,7 +49,6 @@ class SerialBridge {
         ROS_DEBUG_STREAM("received, but corrupted; status= " << status);
       }
 
-      //
       ros::spinOnce();
       loop_rate.sleep();
     }
@@ -74,11 +79,25 @@ class SerialBridge {
       } else {
         ROS_DEBUG("GPS data received, but NO FIX");
       }
+    } else if(id=="RCS") {
+      uint8_t n_ch = data.content.size() - 1;// minus one for the header field
+      
+      serial_bridge::RCData rc_data;
+      rc_data.PPMs.resize(n_ch);
+      rc_data.init_PPMs.resize(n_ch);
+      
+      for (uint8_t i=0; i<n_ch; ++i) {
+        rc_data.init_PPMs.at(i) = boost::lexical_cast<uint16_t>(data.content.at(i+1).at(0));
+        rc_data.PPMs.at(i) = boost::lexical_cast<uint16_t>(data.content.at(i+1).at(1));
+      }
+      
+      ch_1_rc_data_pub_.publish(rc_data);
     }
   }
 
   ros::NodeHandle nh_;
   ros::Publisher gps_data_pub_;
+  ros::Publisher ch_1_rc_data_pub_ ;
   crim::GndCtrlPacket packet_;
 };
 

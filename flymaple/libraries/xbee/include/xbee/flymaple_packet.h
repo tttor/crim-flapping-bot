@@ -21,7 +21,7 @@ class FlymaplePacket: public Packet {
   /**
     @brief
   */
-  FlymaplePacket(std::string port, size_t baud);
+  FlymaplePacket(std::string port, size_t baud=9600);
 
   /**
     @brief

@@ -1,10 +1,10 @@
 // @author vektor dewanto
-#ifndef FLYMAPLE_PACKET_H
-#define FLYMAPLE_PACKET_H
+#ifndef FLYMAPLE_PACKET_HANDLER_H
+#define FLYMAPLE_PACKET_HANDLER_H
 
 #include "wirish.h"
 
-#include "packet/packet.h"
+#include "packet/packet_handler.h"
 #include "data-format/string_data.h"
 //#include "xbee/hl_md5wrapper_for_flymaple.h"// TODO Fix this header to include
 //#include "xbee/hl_md5_for_flymaple.h"// TODO Fix this header to include
@@ -16,12 +16,12 @@ static const size_t SERIAL_1 = 1;
 static const size_t SERIAL_2 = 2;
 static const size_t SERIAL_3 = 3;
 
-class FlymaplePacket: public Packet {
+class FlymaplePacketHandler: public PacketHandler {
  public:
   /**
     @brief
   */
-  FlymaplePacket(std::string port, size_t baud);
+  FlymaplePacketHandler(std::string port, size_t baud=9600);
 
   /**
     @brief

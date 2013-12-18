@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   sensor_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -45,11 +46,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+ FILES
+ RCData.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -66,10 +66,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages(
+ DEPENDENCIES
+ std_msgs
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -83,7 +83,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES serial_bridge
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -107,11 +107,11 @@ add_library(serial_port
   src/serial_port/TimeoutSerial.cpp
   src/serial_port/hl_md5wrapper.cpp
   src/serial_port/hl_md5.cpp
-  src/serial_port/GndCtrlPacket.cpp
+  src/serial_port/GndCtrlPacketHandler.cpp
 )
 
 add_library(common
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/packet/src/packet.cpp
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/packet/src/packet_handler.cpp
   ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/src/string_data.cpp
   ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/src/gps_data.cpp
   ${CRIM-FLAPPING-BOT_COMMON_PATH}/helper/src/helper.cpp

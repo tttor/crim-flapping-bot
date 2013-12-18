@@ -1,7 +1,7 @@
-// Test packet 
+// Test packer_handler 
 #include "wirish/wirish.h"
 
-#include "xbee/flymaple_packet.h"
+#include "xbee/flymaple_packet_handler.h"
 #include "data-format/gps_data.h"
 
 static const int BAUD_RATE = 9600;
@@ -55,13 +55,13 @@ int main(void) {
   gps_data.set_note(fix, fixquality, satellites);
   
   //
-  FlymaplePacket packet("Serial3", BAUD_RATE);
+  FlymaplePacketHandler packer_handler("Serial3", BAUD_RATE);
   
   while (true) {
-    packet.wrap(gps_data);
+    packer_handler.wrap(gps_data);
     
     bool status = false;
-    status = packet.send();
+    status = packer_handler.send();
     
     //if (status) SerialUSB.println("Sent!");
     //else SerialUSB.println("NOT Sent!");

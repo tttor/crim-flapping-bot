@@ -1,9 +1,9 @@
-#include "xbee/flymaple_packet.h"
+#include "xbee/flymaple_packet_handler.h"
 
 using namespace crim;
 using namespace std;
 
-FlymaplePacket::FlymaplePacket(std::string port, size_t baud): baud_(baud) {
+FlymaplePacketHandler::FlymaplePacketHandler(std::string port, size_t baud): baud_(baud) {
   if (port == "SerialUSB") {
     port_ = SERIAL_USB;
   } else if( port == "Serial1") {
@@ -18,7 +18,7 @@ FlymaplePacket::FlymaplePacket(std::string port, size_t baud): baud_(baud) {
   }
 }
 
-bool FlymaplePacket::send() {
+bool FlymaplePacketHandler::send() {
   bool status = false;
   if (port_==SERIAL_USB) {
     status = send_SerialUSB();
@@ -28,12 +28,12 @@ bool FlymaplePacket::send() {
   return status;
 }
 
-bool FlymaplePacket::send_SerialUSB() {
+bool FlymaplePacketHandler::send_SerialUSB() {
   SerialUSB.println(packet_.c_str());
   return true;
 }
 
-bool FlymaplePacket::send_SerialX() {
+bool FlymaplePacketHandler::send_SerialX() {
   switch (port_) {
     case SERIAL_1: {
       Serial1.print(packet_.c_str());
@@ -54,7 +54,7 @@ bool FlymaplePacket::send_SerialX() {
   return true;
 }
 
-void FlymaplePacket::wrap(const StringData& data) {
+void FlymaplePacketHandler::wrap(const StringData& data) {
   //
   std::string f_data;// f(ormatted)_data
   size_t n_field = data.content.size();
@@ -65,10 +65,10 @@ void FlymaplePacket::wrap(const StringData& data) {
       f_data += data.content.at(i).at(j);
 
       if(j != n_subfield-1)
-        f_data += data_subfield_delimiter_;
+        f_data += PacketHandler::kDataSubfieldDelimiter;
     }
     if(i != n_field-1)
-        f_data += data_field_delimiter_;
+        f_data += PacketHandler::kDataFieldDelimiter;
   }
 
   // For now (Dec 9, 2013), we rely on the built-in checksum on zigbee/xbee

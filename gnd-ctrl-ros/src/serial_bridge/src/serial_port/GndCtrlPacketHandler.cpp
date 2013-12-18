@@ -1,19 +1,19 @@
-#include <serial_port/GndCtrlPacket.h>
+#include <serial_port/GndCtrlPacketHandler.h>
 
 using namespace crim;
 
-GndCtrlPacket::GndCtrlPacket() {
+GndCtrlPacketHandler::GndCtrlPacketHandler() {
   // do nothing
 }
 
-GndCtrlPacket::GndCtrlPacket(std::string port, size_t baud, size_t timeout)
+GndCtrlPacketHandler::GndCtrlPacketHandler(std::string port, size_t baud, size_t timeout)
     : port_(port),
       baud_(baud),
       timeout_(timeout) {
-
+ // do nothing
 }
 
-size_t GndCtrlPacket::receive() {
+size_t GndCtrlPacketHandler::receive() {
   using namespace std;
 
   size_t status = HAPPY;
@@ -21,7 +21,7 @@ size_t GndCtrlPacket::receive() {
     TimeoutSerial serial(port_, baud_);
     serial.setTimeout(boost::posix_time::seconds(timeout_));
 
-    packet_ = serial.readStringUntil(packet_delimiter_);
+    packet_ = serial.readStringUntil(PacketHandler::kPacketDelimiter);
     cerr << "packet_= " << packet_ << endl;
     
     serial.close();
@@ -35,14 +35,14 @@ size_t GndCtrlPacket::receive() {
     //if (status == HAPPY) {
       ////
       //string r_checksum;
-      //r_checksum = packet_.substr(packet_.length()-checksum_length_);
+      //r_checksum = packet_.substr(packet_.length()-PacketHandler::kChecksumLength);
 
       ////
       //hashwrapper *h = new md5wrapper();
       //h->test();
 
       //std::string header_plus_data;
-      //header_plus_data = packet_.substr(0, packet_.length()-checksum_length_);
+      //header_plus_data = packet_.substr(0, packet_.length()-PacketHandler::kChecksumLength);
 
       //std::string c_checksum;
       //c_checksum = h->getHashFromString(header_plus_data);
@@ -53,7 +53,7 @@ size_t GndCtrlPacket::receive() {
       //if (c_checksum != r_checksum)
         //status = CHECKSUM_MISMATCH;
       //else
-        //packet_ = packet_.substr(0,packet_.length()-checksum_length_); // remove checksum
+        //packet_ = packet_.substr(0,packet_.length()-PacketHandler::kChecksumLength); // remove checksum
     //}
   } catch(boost::system::system_error& e) {
       cerr << "Error: " << e.what() << endl;
@@ -63,13 +63,13 @@ size_t GndCtrlPacket::receive() {
   return status;
 }
 
-crim::StringData GndCtrlPacket::unwrap(){
+crim::StringData GndCtrlPacketHandler::unwrap(){
   using namespace std;
 
   crim::StringData data;
 
   vector<string> fields;
-  boost::split(fields, packet_, boost::is_any_of(data_field_delimiter_));
+  boost::split(fields, packet_, boost::is_any_of(PacketHandler::kDataFieldDelimiter));
 
   if (fields.at(0) == string()) {
     cerr << "ERR: fields.at(0) == string() \n";
@@ -78,7 +78,7 @@ crim::StringData GndCtrlPacket::unwrap(){
 
   for(size_t i=0; i<fields.size(); ++i) {
     vector<string> subfields;
-    boost::split(subfields, fields.at(i), boost::is_any_of(data_subfield_delimiter_));
+    boost::split(subfields, fields.at(i), boost::is_any_of(PacketHandler::kDataSubfieldDelimiter));
 
     data.content.push_back(subfields);
   }

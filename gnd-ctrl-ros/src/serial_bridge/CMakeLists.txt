@@ -107,11 +107,11 @@ add_library(serial_port
   src/serial_port/TimeoutSerial.cpp
   src/serial_port/hl_md5wrapper.cpp
   src/serial_port/hl_md5.cpp
-  src/serial_port/GndCtrlPacket.cpp
+  src/serial_port/GndCtrlPacketHandler.cpp
 )
 
 add_library(common
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/packet/src/packet.cpp
+  ${CRIM-FLAPPING-BOT_COMMON_PATH}/packet/src/packet_handler.cpp
   ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/src/string_data.cpp
   ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/src/gps_data.cpp
   ${CRIM-FLAPPING-BOT_COMMON_PATH}/helper/src/helper.cpp

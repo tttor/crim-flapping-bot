@@ -4,7 +4,7 @@
 #include <sensor_msgs/NavSatStatus.h>
 #include <sensor_msgs/NavSatFix.h>
 
-#include <serial_port/GndCtrlPacket.h>
+#include <serial_port/GndCtrlPacketHandler.h>
 #include <data-format/string_data.h>
 #include <helper/helper.hpp>
 
@@ -23,7 +23,7 @@ class SerialBridge {
     gps_data_pub_ = nh_.advertise<sensor_msgs::NavSatFix>("gps_data", 1000);
     ch_1_rc_data_pub_ = nh_.advertise<serial_bridge::RCData>("rc_data", 1000);
     
-    packet_ = crim::GndCtrlPacket("/dev/ttyUSB0", 9600, 5);
+    packet_handler_ = crim::GndCtrlPacketHandler("/dev/ttyUSB0", 9600, 5);
     ROS_INFO("serial_bridge: up and running ;)");
   }
 
@@ -37,12 +37,12 @@ class SerialBridge {
 
     while (ros::ok()) {
       size_t status;
-      status = packet_.receive();
+      status = packet_handler_.receive();
 
       if (status==0) { //is good
         ROS_DEBUG_STREAM("received, status= " << status);
         crim::StringData data;
-        data = packet_.unwrap();
+        data = packet_handler_.unwrap();
 
         publish(data);
       } else {
@@ -98,7 +98,7 @@ class SerialBridge {
   ros::NodeHandle nh_;
   ros::Publisher gps_data_pub_;
   ros::Publisher ch_1_rc_data_pub_ ;
-  crim::GndCtrlPacket packet_;
+  crim::GndCtrlPacketHandler packet_handler_;
 };
 
 }// namespace crim

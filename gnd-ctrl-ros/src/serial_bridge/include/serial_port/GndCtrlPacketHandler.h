@@ -1,9 +1,9 @@
 // @author vektor dewanto
-#ifndef GND_CTRL_PACKET_H
-#define GND_CTRL_PACKET_H
+#ifndef GND_CTRL_PACKET_HANDLER_H
+#define GND_CTRL_PACKET_HANDLER_H
 
 #include <string>
-#include <packet/packet.h>
+#include <packet/packet_handler.h>
 
 #include <serial_port/TimeoutSerial.h>
 #include <serial_port/hl_hashwrapper.h>
@@ -20,17 +20,17 @@ const size_t CHECKSUM_MISMATCH = 1;
 const size_t NONSENSE_DATA = 2;// either empty or even header-only is not complete
 const size_t TIMEOUT = 3;
 
-class GndCtrlPacket: public Packet {
+class GndCtrlPacketHandler: public PacketHandler {
  public:
    /**
     @brief
   */
-  GndCtrlPacket();
+  GndCtrlPacketHandler();
 
   /**
     @brief
   */
-  GndCtrlPacket(std::string port, size_t baud, size_t timeout);
+  GndCtrlPacketHandler(std::string port, size_t baud, size_t timeout);
 
   /**
     @brief
@@ -46,7 +46,6 @@ class GndCtrlPacket: public Packet {
   std::string port_;
   size_t baud_;
   size_t timeout_;
-
 };
 
 }// namespace crim

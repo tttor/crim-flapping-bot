@@ -5,7 +5,7 @@
 #include "wirish.h"
 #include "rc/radio_control.h"
 #include "data-format/rc_data.h"
-#include "xbee/flymaple_packet.h"
+#include "xbee/flymaple_packet_handler.h"
 
 // Force init() to be called before anything else.
 __attribute__((constructor)) void premain() {
@@ -54,7 +54,7 @@ int main(void) {
   RCData rc_data(rc_ch_pins.size());
   rc_data.set_init_PPMs(init_PPMs);
   
-  FlymaplePacket packet("Serial3");
+  FlymaplePacketHandler packet_handler("Serial3");
   
   while (true) {         
     std::vector<uint16_t> PPMs;
@@ -65,11 +65,11 @@ int main(void) {
     }
     rc_data.set_PPMs(PPMs);
 
-    packet.wrap(rc_data);
-    packet.send();
+    packet_handler.wrap(rc_data);
+    packet_handler.send();
     SerialUSB.println("sent");
     
-    delay(500);
+    delay(100);
   }
    
   return 0;

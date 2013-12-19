@@ -1,16 +1,16 @@
 #include <stdlib.h> // for Adafruit_GPS lib, and this _must_ be on top of all #include
-
 #include "wirish.h"
-
 #include "gps/Adafruit_GPS.h"
-#include "xbee/flymaple_packet.h"
+#include "xbee/flymaple_packet_handler.h"
 #include "data-format/gps_data.h"
 
+static const int SERIAL1_BAUD_RATE = 9600;
 static const int SERIAL2_BAUD_RATE = 9600;
+static const int SERIAL3_BAUD_RATE = 9600;
 static size_t TIMER_PERIODE = 1000; // in microseconds
 
 HardwareTimer timer(2);
-Adafruit_GPS GPS(&Serial1);
+Adafruit_GPS GPS(&Serial2);
 
 void timer_int_handler(void) {
   GPS.read();
@@ -51,9 +51,9 @@ void setup()
 
   // Set the update rate
   // 1 Hz update rate
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+  //GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
   // 5 Hz update rate- for 9600 baud you'll have to set the output to RMC or RMCGGA only (see above)
-  //GPS.sendCommand(PMTK_SET_NMEA_UPDATE_5HZ);
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_5HZ);
   // 10 Hz update rate - for 9600 baud you'll have to set the output to RMC only (see above)
   //GPS.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ);
 
@@ -90,9 +90,9 @@ void loop()
       gps_data.set_misc(GPS.speed, GPS.angle);
       gps_data.set_note(GPS.fix, GPS.fixquality, GPS.satellites);
 
-      crim::FlymaplePacket packet("Serial2", SERIAL2_BAUD_RATE);
-      packet.wrap(gps_data);
-      packet.send();
+      crim::FlymaplePacketHandler packet_handler("Serial1", SERIAL1_BAUD_RATE);
+      packet_handler.wrap(gps_data);
+      packet_handler.send();
     }
   }
   else {
@@ -110,8 +110,9 @@ int main() {
   setup();
 
   while(true) {
+    SerialUSB.println("looping");
     loop();
-    delay(1000);
+    delay(100);
   }
 
   return 0;

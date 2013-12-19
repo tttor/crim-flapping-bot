@@ -63,14 +63,14 @@ class SerialBridge {
     id = data.content.at(0).at(0);
 
     if (id=="GPS") {
-      int8_t status = 0;
-      status = boost::lexical_cast<int8_t>(data.content.at(5).at(0));
+      bool status = 0;
+      status = boost::lexical_cast<bool>(data.content.at(5).at(0));
 
-      if (status == 1) { // Fix
+      if (status) {
         ROS_DEBUG("GPS data received, with FIX");
 
         sensor_msgs::NavSatFix gps_data;
-        gps_data.status.status = sensor_msgs::NavSatStatus::STATUS_FIX;
+        gps_data.status.status = sensor_msgs::NavSatStatus::STATUS_FIX;// # unaugmented fix
         gps_data.latitude = crim::Helper::convert_dms_to_dec(data.content.at(3).at(0), data.content.at(3).at(1));
         gps_data.longitude = crim::Helper::convert_dms_to_dec(data.content.at(3).at(2), data.content.at(3).at(3));
         gps_data.altitude = boost::lexical_cast<double>(data.content.at(3).at(4));
@@ -80,15 +80,15 @@ class SerialBridge {
         ROS_DEBUG("GPS data received, but NO FIX");
       }
     } else if(id=="RCS") {
-      uint8_t n_ch = data.content.size() - 1;// minus one for the header field
+      size_t n_ch = data.content.size() - 1;// minus one for the header field
       
       serial_bridge::RCData rc_data;
       rc_data.PPMs.resize(n_ch);
       rc_data.init_PPMs.resize(n_ch);
       
-      for (uint8_t i=0; i<n_ch; ++i) {
-        rc_data.init_PPMs.at(i) = boost::lexical_cast<uint16_t>(data.content.at(i+1).at(0));
-        rc_data.PPMs.at(i) = boost::lexical_cast<uint16_t>(data.content.at(i+1).at(1));
+      for (size_t i=0; i<n_ch; ++i) {
+        rc_data.init_PPMs.at(i) = boost::lexical_cast<size_t>(data.content.at(i+1).at(0));
+        rc_data.PPMs.at(i) = boost::lexical_cast<size_t>(data.content.at(i+1).at(1));
       }
       
       ch_1_rc_data_pub_.publish(rc_data);

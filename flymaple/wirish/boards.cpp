@@ -42,6 +42,7 @@
 #include "adc.h"
 #include "timer.h"
 #include "usb_cdcacm.h"
+#include "i2c.h"
 
 static void setupFlash(void);
 static void setupClocks(void);
@@ -60,6 +61,7 @@ void init(void) {
     setupTimers();
     usb_cdcacm_enable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
     boardInit();
+    i2c_master_enable(I2C1, I2C_FAST_MODE);
 }
 
 /* You could farm this out to the files in boards/ if e.g. it takes

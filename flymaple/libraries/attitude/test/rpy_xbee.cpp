@@ -11,21 +11,22 @@ __attribute__((constructor)) void premain() {
 int main(void) {
   using namespace crim;
   
-  Attitude attitude;
   FlymaplePacketHandler packer_handler("Serial3", 9600);
   
   while(1) {
     SerialUSB.println("looping");
 
-    attitude.read();
+    //Attitude attitude;
+    //attitude.read();
     
     double x, y, z;
     x = y = z = 0.0;
 
     double roll, pitch, yaw;
-    roll = attitude.roll();
-    pitch = attitude.pitch();
-    yaw = attitude.yaw();
+    roll = pitch = yaw = 0.0;
+    //roll = attitude.roll();
+    //pitch = attitude.pitch();
+    //yaw = attitude.yaw();
   
     SerialUSB.print("roll (rad) = "); SerialUSB.print(roll); SerialUSB.print("\t");
     SerialUSB.print("pitch (rad) = "); SerialUSB.print(pitch); SerialUSB.print("\t");

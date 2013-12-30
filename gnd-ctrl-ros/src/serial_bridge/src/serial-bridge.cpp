@@ -3,6 +3,7 @@
 
 #include <sensor_msgs/NavSatStatus.h>
 #include <sensor_msgs/NavSatFix.h>
+#include <tf/transform_broadcaster.h>
 
 #include <serial_port/GndCtrlPacketHandler.h>
 #include <data-format/string_data.h>
@@ -41,12 +42,13 @@ class SerialBridge {
 
       if (status==0) { //is good
         ROS_DEBUG_STREAM("received, status= " << status);
+      
         crim::StringData data;
         data = packet_handler_.unwrap();
 
         publish(data);
       } else {
-        ROS_DEBUG_STREAM("received, but corrupted; status= " << status);
+        ROS_WARN_STREAM("BAD packet: status= " << status);
       }
 
       ros::spinOnce();
@@ -79,7 +81,7 @@ class SerialBridge {
       } else {
         ROS_DEBUG("GPS data received, but NO FIX");
       }
-    } else if(id=="RCS") {
+    } else if (id=="RCS") {
       size_t n_ch = data.content.size() - 1;// minus one for the header field
       
       serial_bridge::RCData rc_data;
@@ -92,6 +94,27 @@ class SerialBridge {
       }
       
       ch_1_rc_data_pub_.publish(rc_data);
+    } else if (id=="POS") {
+      static tf::TransformBroadcaster tf_bc;
+      tf::Transform transform;
+      
+      std::string parent_frame, frame;
+      parent_frame = data.content.at(1).at(0);
+      frame = data.content.at(1).at(1);
+      
+      double x, y, z;
+      x = boost::lexical_cast<double>(data.content.at(2).at(0));
+      y = boost::lexical_cast<double>(data.content.at(2).at(1));
+      z = boost::lexical_cast<double>(data.content.at(2).at(2));
+      transform.setOrigin( tf::Vector3(x, y, z) );
+      
+      double roll, pitch, yaw;
+      roll = boost::lexical_cast<double>(data.content.at(3).at(0));
+      pitch = boost::lexical_cast<double>(data.content.at(3).at(1));
+      yaw = boost::lexical_cast<double>(data.content.at(3).at(2));
+      transform.setRotation( tf::Quaternion(roll, pitch, yaw) );
+      
+      tf_bc.sendTransform(tf::StampedTransform(transform, ros::Time::now(), parent_frame, frame));
     }
   }
 

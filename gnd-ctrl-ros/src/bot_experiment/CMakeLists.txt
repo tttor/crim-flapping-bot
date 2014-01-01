@@ -7,6 +7,7 @@ project(bot_experiment)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -43,11 +44,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+ FILES
+ WeightScaleData.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -64,10 +64,10 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+generate_messages(
+ DEPENDENCIES
+ std_msgs  # Or other packages containing msgs
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -81,7 +81,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES bot_experiment
-#  CATKIN_DEPENDS roscpp rospy
+  CATKIN_DEPENDS roscpp rospy
 #  DEPENDS system_lib
 )
 
@@ -91,7 +91,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
+include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
@@ -102,16 +102,16 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-# add_executable(bot_experiment_node src/bot_experiment_node.cpp)
+add_executable(scale src/weight_scale.cpp src/TimeoutSerial.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(bot_experiment_node bot_experiment_generate_messages_cpp)
+add_dependencies(scale bot_experiment_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(bot_experiment_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(scale
+ ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##

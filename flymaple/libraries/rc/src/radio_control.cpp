@@ -2,7 +2,7 @@
 
 using namespace crim;
 
-const uint16_t RadioControl::kPPMThresholdBelow = 1092;
+const uint16_t RadioControl::kPPMThresholdBelow = 1000;
 const uint16_t RadioControl::kPPMThresholdAbove = 1920;
 const uint16_t RadioControl::kPPMTolerance = 15;
   

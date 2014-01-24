@@ -1,0 +1,34 @@
+# REF: http://www.ashleymills.com/node/327
+MCU=-mmcu=atmega328p
+MCU_TAG=m328p # See the avrdude manual
+CPU_SPEED=-DF_CPU=16000000UL
+UPLOAD_BAUDRATE=115200
+
+CXX_COMPILER=avr-gcc
+INCLUDE=-I ./include/
+LIBS=-L ./lib/ -lm -larduino-core
+CFLAGS=$(MCU) $(CPU_SPEED) -Os -w -Wl,--gc-sections -ffunction-sections -fdata-sections
+PORT=/dev/ttyACM0
+BUILD_DIR= ./build
+
+# Put objects to build here
+OBJECTS= main.cpp
+
+default:
+	mkdir -p $(BUILD_DIR)
+	$(CXX_COMPILER) $(OBJECTS) $(CFLAGS) $(INCLUDE) $^ -o $(BUILD_DIR)/main.elf $(LIBS)
+	avr-objcopy -O ihex $(BUILD_DIR)/main.elf $(BUILD_DIR)/main.hex
+
+upload:
+	avrdude -V -F -p $(MCU_TAG) -c arduino -b $(UPLOAD_BAUDRATE) -Uflash:w:$(BUILD_DIR)/main.hex -P$(PORT)
+
+install: upload
+
+clean:
+	$(shell rm *.elf 2> /dev/null)
+	$(shell rm *.hex 2> /dev/null)
+	$(shell rm *.o 2> /dev/null)
+	rm -rf $(BUILD_DIR)
+	
+%.o: %.cpp
+	$(CXX_COMPILER) $< $(CFLAGS) $(INCLUDE) -c -o $@

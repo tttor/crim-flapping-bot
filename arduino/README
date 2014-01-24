@@ -1,0 +1,4 @@
+===
+For the first use, 
+build some libs whose source code is under ./src; the needed Makefile is inside each lib dir
+

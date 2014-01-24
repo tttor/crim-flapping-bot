@@ -4,11 +4,12 @@ MCU_TAG=m328p # See the avrdude manual
 CPU_SPEED=-DF_CPU=16000000UL
 UPLOAD_BAUDRATE=115200
 
-CXX_COMPILER=avr-gcc
-INCLUDE=-I ./include/
-LIBS=-L ./lib/ -lm -larduino-core
-CFLAGS=$(MCU) $(CPU_SPEED) -Os -w -Wl,--gc-sections -ffunction-sections -fdata-sections
-PORT=/dev/ttyACM0
+CXX_COMPILER= avr-gcc
+INCLUDE= -I ./include/
+INCLUDE_2= -I ./include/arduino-core # Because some files from arduino-core include headers using <#include <new.h> instead of <arduino/new>
+LIBS= -L ./lib -lm -larduino-core
+CFLAGS= $(MCU) $(CPU_SPEED) -Os -w -Wl,--gc-sections -ffunction-sections -fdata-sections
+PORT= /dev/ttyACM0
 BUILD_DIR= ./build
 
 # Put objects to build here
@@ -16,7 +17,7 @@ OBJECTS= main.cpp
 
 default:
 	mkdir -p $(BUILD_DIR)
-	$(CXX_COMPILER) $(OBJECTS) $(CFLAGS) $(INCLUDE) $^ -o $(BUILD_DIR)/main.elf $(LIBS)
+	$(CXX_COMPILER) $(OBJECTS) $(CFLAGS) $(INCLUDE) $(INCLUDE_2) $^ -o $(BUILD_DIR)/main.elf $(LIBS)
 	avr-objcopy -O ihex $(BUILD_DIR)/main.elf $(BUILD_DIR)/main.hex
 
 upload:

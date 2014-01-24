@@ -13,6 +13,7 @@
 */build/*
 flymaple/common/
 flymaple/build/
+arduino/build/
 
 # the main-and-hot file for flymaple programming
 *flymaple/main.cpp

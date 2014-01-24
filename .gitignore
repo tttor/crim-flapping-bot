@@ -13,9 +13,11 @@
 */build/*
 flymaple/common/
 flymaple/build/
+arduino/build/
 
 # the main-and-hot file for flymaple programming
-*flymaple/main.cpp
+flymaple/main.cpp
+arduino/main.cpp
 
 # temporary CMake files
 gnd-ctrl/CMakeFiles/

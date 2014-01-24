@@ -1,0 +1,7 @@
+<launch>
+<!-- GOAL: test pose data using rviz -->
+
+<node name="bot" pkg="serial_bridge" type="serial_bridge"/> 
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find bot_experiment)/config/config.rviz" />
+
+</launch>

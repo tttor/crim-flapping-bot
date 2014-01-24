@@ -31,8 +31,8 @@ int main(void) {
   
   // Wait for RC to be at its normal position
   // TODO make this in the RC class (?)    
-  uint16_t ch_1_normal_ppm = 1508;
-  uint16_t ch_2_normal_ppm = 1510;
+  uint16_t ch_1_normal_ppm = 1508;// TGY 9X: 1496;
+  uint16_t ch_2_normal_ppm = 1510;// TGY 9X: 1455;
   
   pinMode(BOARD_LED_PIN, OUTPUT);
   while( (rc.read(1) < (ch_1_normal_ppm-RadioControl::kPPMTolerance)) or 

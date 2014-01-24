@@ -11,7 +11,8 @@ CFLAGS_$(d) := $(WIRISH_INCLUDES) $(LIBMAPLE_INCLUDES)
 cSRCS_$(d) :=
 cppSRCS_$(d) := ../src/string_data.cpp \
                 ../src/gps_data.cpp \
-                ../src/rc_data.cpp
+                ../src/rc_data.cpp \
+                ../src/pose_data.cpp
 
 cFILES_$(d) := $(cSRCS_$(d):%=$(d)/%)
 cppFILES_$(d) := $(cppSRCS_$(d):%=$(d)/%)

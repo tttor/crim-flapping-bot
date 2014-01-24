@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(serial_bridge)
+project(bot_experiment)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -7,9 +7,6 @@ project(serial_bridge)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  std_msgs
-  sensor_msgs
-  tf
   message_generation
 )
 
@@ -49,7 +46,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
  FILES
- RCData.msg
+ WeightScaleData.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -69,7 +66,7 @@ add_message_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
  DEPENDENCIES
- std_msgs
+ std_msgs  # Or other packages containing msgs
 )
 
 ###################################
@@ -83,53 +80,37 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES serial_bridge
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+#  LIBRARIES bot_experiment
+  CATKIN_DEPENDS roscpp rospy
 #  DEPENDS system_lib
 )
 
 ###########
 ## Build ##
 ###########
-set(CRIM-FLAPPING-BOT_COMMON_PATH ../../../common)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/packet/include
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/include
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/helper/include
 )
 
 ## Declare a cpp library
-add_library(serial_port
-  src/serial_port/TimeoutSerial.cpp
-  src/serial_port/hl_md5wrapper.cpp
-  src/serial_port/hl_md5.cpp
-  src/serial_port/GndCtrlPacketHandler.cpp
-)
-
-add_library(common
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/packet/src/packet_handler.cpp
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/src/string_data.cpp
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/data-format/src/gps_data.cpp
-  ${CRIM-FLAPPING-BOT_COMMON_PATH}/helper/src/helper.cpp
-)
+# add_library(bot_experiment
+#   src/${PROJECT_NAME}/bot_experiment.cpp
+# )
 
 ## Declare a cpp executable
-add_executable(serial_bridge src/serial-bridge.cpp)
+add_executable(scale src/weight_scale.cpp src/TimeoutSerial.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(serial_bridge serial_bridge_generate_messages_cpp)
+add_dependencies(scale bot_experiment_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(serial_bridge
-  ${catkin_LIBRARIES}
-  serial_port
-  common
+target_link_libraries(scale
+ ${catkin_LIBRARIES}
 )
 
 #############
@@ -147,7 +128,7 @@ target_link_libraries(serial_bridge
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS serial_bridge serial_bridge_node
+# install(TARGETS bot_experiment bot_experiment_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -172,7 +153,7 @@ target_link_libraries(serial_bridge
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_serial_bridge.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_bot_experiment.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

@@ -1,0 +1,7 @@
+<launch>
+<!-- GOAL: test plotting RC data -->
+
+<node name="bot" pkg="serial_bridge" type="serial_bridge"/> 
+<node name="plotter" pkg="rqt_plot" type="rqt_plot" args="/rc_data/PPMs[0]:PPMs[1]:PPMs[2]" />
+
+</launch>

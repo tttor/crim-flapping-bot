@@ -1,7 +1,7 @@
 Wiring notes:
-1) USART1 (COM1) -> XBee
+1) USART1 (COM1) -> GPS
 2) USART2 -> Maestro servo controller
-3) USART3 -> GPS
+3) USART3 -> XBee
 4) TIMER3 (at D28, D12) -> PWM motors
 5) TIMER2 -> GPS.read()
 6) D31, D32, D33, D34, D35, D36, D37, D26 -> 8-channel RC

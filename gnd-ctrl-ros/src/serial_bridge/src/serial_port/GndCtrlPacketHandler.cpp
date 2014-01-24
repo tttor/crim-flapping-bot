@@ -55,7 +55,7 @@ size_t GndCtrlPacketHandler::receive() {
       //else
         //packet_ = packet_.substr(0,packet_.length()-PacketHandler::kChecksumLength); // remove checksum
     //}
-  } catch(boost::system::system_error& e) {
+  } catch(std::exception& e) {
       cerr << "Error: " << e.what() << endl;
       status = TIMEOUT;
   }

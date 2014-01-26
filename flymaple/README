@@ -1,3 +1,4 @@
+------------------------------------------------------------------------------
 Wiring notes:
 1) USART1 (COM1) -> GPS
 2) USART2 -> Maestro servo controller
@@ -44,7 +45,7 @@ Therefore, it is recommended to use sudo for each step ;)
 
 Reference:
 http://leaflabs.com/docs/unix-toolchain.html
-
+http://leaflabs.com/docs/index.html
 ------------------------------------------------------------------------------
                    _ _ _                           _
                   | (_) |__  _ __ ___   __ _ _ __ | | ___

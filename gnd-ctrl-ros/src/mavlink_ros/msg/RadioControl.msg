@@ -1,0 +1,11 @@
+Header header
+uint16 ch1_raw
+uint16 ch2_raw
+uint16 ch3_raw
+uint16 ch4_raw
+uint16 ch5_raw
+uint16 ch6_raw
+uint16 ch7_raw
+uint16 ch8_raw
+uint8 port
+uint8 rssi

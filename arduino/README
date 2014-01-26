@@ -2,3 +2,7 @@
 For the first use, 
 build some libs whose source code is under ./src; the needed Makefile is inside each lib dir
 
+===
+Install some necessary packages:
+$ sudo apt-get install avrdude binutils-avr gcc-avr avr-libc gdb-avr
+

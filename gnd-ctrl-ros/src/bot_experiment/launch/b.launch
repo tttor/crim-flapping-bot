@@ -1,7 +1,7 @@
 <launch>
 <!-- GOAL: test plotting RC data -->
 
-<node name="bot" pkg="serial_bridge" type="serial_bridge"/> 
-<node name="plotter" pkg="rqt_plot" type="rqt_plot" args="/rc_data/PPMs[0]:PPMs[1]:PPMs[2]" />
+<node name="mavlink_bridge" pkg="mavlink_ros" type="mavlink_ros_serial"/> 
+<node name="plotter" pkg="rqt_plot" type="rqt_plot" args="/fcu/rc/ch1_raw /fcu/rc/ch2_raw /fcu/rc/ch3_raw /fcu/rc/ch4_raw" />
 
 </launch>

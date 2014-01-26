@@ -9,8 +9,7 @@ CFLAGS_$(d) := $(WIRISH_INCLUDES) $(LIBMAPLE_INCLUDES)
 
 # Local rules and targets
 cSRCS_$(d) :=
-cppSRCS_$(d) := ../src/flymaple_packet_handler.cpp \
-								../src/flymaple_mavlink_packet_handler.cpp
+cppSRCS_$(d) :=
 
 cFILES_$(d) := $(cSRCS_$(d):%=$(d)/%)
 cppFILES_$(d) := $(cppSRCS_$(d):%=$(d)/%)

@@ -81,3 +81,10 @@ void FlymapleMavlinkPacketHandler::wrap(mavlink_raw_imu_t raw_msg) {
                            raw_msg.xmag, raw_msg.ymag, raw_msg.zmag);
 }
 
+void FlymapleMavlinkPacketHandler::wrap(mavlink_gps_raw_int_t raw_msg) {
+  mavlink_msg_gps_raw_int_pack(mavlink_system_.sysid, mavlink_system_.compid, msg_,
+                               raw_msg.time_usec, raw_msg.fix_type,
+                               raw_msg.lat, raw_msg.lon, raw_msg.alt, 
+                               raw_msg.eph, raw_msg.epv, raw_msg.vel, raw_msg.cog,
+                               raw_msg.satellites_visible);
+}

@@ -36,6 +36,8 @@
 #include "sensor_msgs/MagneticField.h"
 #include "sensor_msgs/Temperature.h"
 #include "sensor_msgs/FluidPressure.h"
+#include <sensor_msgs/NavSatFix.h>
+#include <sensor_msgs/NavSatStatus.h>
 #include <mavlink_ros/Mavlink.h>
 #include <mavlink_ros/RadioControl.h>
 
@@ -50,6 +52,7 @@
 #include <string.h>
 #include <inttypes.h>
 #include <fstream>
+#include <vector>
 
 // Serial includes
 #include <stdio.h>   /* Standard input/output definitions */
@@ -96,6 +99,7 @@ ros::Publisher imu_raw_pub;
 ros::Publisher mag_pub;
 ros::Publisher pressure_pub;
 ros::Publisher rc_pub;
+ros::Publisher gps_pub;
 
 mavlink_raw_imu_t imu_raw;
 std::string frame_id("fcu");
@@ -403,6 +407,34 @@ void* serial_wait(void* serial_ptr)
       ROS_DEBUG("Dispatching...");
       switch (message.msgid)
       {
+        case MAVLINK_MSG_ID_GPS_RAW_INT:
+        {
+          ROS_DEBUG("MAVLINK_MSG_ID_GPS_RAW_INT");
+          
+          mavlink_gps_raw_int_t gps;
+          mavlink_msg_gps_raw_int_decode(&message, &gps);
+          
+          // Notice the difference of status definitions between sensor_msgs::NavSatStatus and mavlink_gps_raw_int_t
+          sensor_msgs::NavSatStatus gps_status_msg;
+          
+          gps_status_msg.service = 1;
+          
+          if (gps.fix_type==0 or gps.fix_type==1)
+            gps_status_msg.status = -1;
+          else
+            gps_status_msg.status = 0;
+            
+          sensor_msgs::NavSatFixPtr gps_msg(new sensor_msgs::NavSatFix);
+          gps_msg->status = gps_status_msg;
+          gps_msg->latitude = gps.lat;
+          gps_msg->longitude = gps.lon;
+          gps_msg->altitude = gps.alt;
+          //gps_msg->position_covariance = ???;
+          gps_msg->position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_UNKNOWN;
+          
+          gps_pub.publish(gps_msg);
+        }
+          break;
         case MAVLINK_MSG_ID_RAW_IMU:
         {
           ROS_DEBUG("MAVLINK_MSG_ID_RAW_IMU");
@@ -706,13 +738,12 @@ int main(int argc, char **argv)
   mavlink_sub = mavlink_nh.subscribe("to", 1000, mavlinkCallback);
   mavlink_pub = mavlink_nh.advertise<mavlink_ros::Mavlink>("from", 1000);
 
-  ros::NodeHandle nh("fcu");
-  imu_pub = nh.advertise<sensor_msgs::Imu>("imu", 10);
-  mag_pub = nh.advertise<sensor_msgs::MagneticField>("mag", 10);
-  rc_pub = nh.advertise<mavlink_ros::RadioControl>("rc",10);
-
-  ros::NodeHandle raw_nh("fcu/raw");
-  imu_raw_pub = raw_nh.advertise<sensor_msgs::Imu>("imu", 10);
+  ros::NodeHandle fcu_nh("fcu");
+  imu_raw_pub = fcu_nh.advertise<sensor_msgs::Imu>("raw/imu", 10);
+  imu_pub = fcu_nh.advertise<sensor_msgs::Imu>("imu", 10);// attitude
+  mag_pub = fcu_nh.advertise<sensor_msgs::MagneticField>("mag", 10);
+  rc_pub = fcu_nh.advertise<mavlink_ros::RadioControl>("rc", 10);
+  gps_pub = fcu_nh.advertise<sensor_msgs::NavSatFix>("gps", 10);
   
   GThread* serial_thread;
   GError* err;

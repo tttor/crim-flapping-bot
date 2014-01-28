@@ -1,6 +1,9 @@
 # temp. editor backups:
 *~
 
+# data
+gnd-ctrl-ros/src/bot_experiment/data
+
 # TEX aux. files
 *.bbl
 *.blg

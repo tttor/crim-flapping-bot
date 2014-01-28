@@ -6,7 +6,10 @@ project(bot_experiment)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  rospy
+  std_msgs
+  rosbag
+  foo_msgs
+  mavlink_ros
   message_generation
 )
 
@@ -79,10 +82,10 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES bot_experiment
-  CATKIN_DEPENDS roscpp rospy
-#  DEPENDS system_lib
+  #INCLUDE_DIRS include
+  #LIBRARIES bot_experiment
+  #CATKIN_DEPENDS roscpp rospy
+  #DEPENDS system_lib
 )
 
 ###########
@@ -91,8 +94,9 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include)
+#include_directories(include)
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -102,15 +106,28 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-add_executable(scale src/weight_scale.cpp src/TimeoutSerial.cpp)
+#add_executable(scale src/weight_scale.cpp src/TimeoutSerial.cpp)
+add_executable(helper src/helper_node.cpp)
+add_executable(bag_converter src/bag_to_csv_converter.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-add_dependencies(scale bot_experiment_generate_messages_cpp)
+#add_dependencies(scale bot_experiment_generate_messages_cpp)
+add_dependencies(helper mavlink_ros_generate_messages_cpp)
+add_dependencies(bag_converter mavlink_ros_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(scale
+#target_link_libraries(scale
+ #${catkin_LIBRARIES}
+#)
+
+target_link_libraries(helper
  ${catkin_LIBRARIES}
+ log4cxx
+)
+target_link_libraries(bag_converter
+ ${catkin_LIBRARIES}
+ log4cxx
 )
 
 #############

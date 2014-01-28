@@ -6,7 +6,8 @@
 //#define TEST_SENDING_ATTITUDE_MSG
 //#define TEST_SENDING_HIGHRES_IMU_MSG
 //#define TEST_SENDING_RC_MSG
-#define TEST_SENDING_RAW_IMU_MSG
+//#define TEST_SENDING_RAW_IMU_MSG
+#define TEST_SENDING_GPS_MSG
 
 // Force init() to be called before anything else.
 __attribute__((constructor)) void premain() {
@@ -83,6 +84,21 @@ int main() {
   msg.xmag = 72;
   msg.ymag = 82;
   msg.zmag = 92;
+#endif
+
+#ifdef TEST_SENDING_GPS_MSG
+  mavlink_gps_raw_int_t msg;
+  
+  msg.time_usec = micros();
+  msg.lat = -1234567;
+  msg.lon = -2345678;
+  msg.alt = -3456789;
+  msg.eph = 65535;
+  msg.epv = 65535;
+  msg.vel = 65535;
+  msg.cog = 65535;
+  msg.fix_type = 0;
+  msg.satellites_visible = 0;
 #endif
 
   //

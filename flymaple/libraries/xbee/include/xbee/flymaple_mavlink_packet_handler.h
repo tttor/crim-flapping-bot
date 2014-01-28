@@ -44,7 +44,12 @@ class FlymapleMavlinkPacketHandler {
    * @brief
    */
   void wrap(mavlink_raw_imu_t raw_msg);
-  
+
+  /**
+   * @brief
+   */
+  void wrap(mavlink_gps_raw_int_t raw_msg);
+    
  private:
   mavlink_system_t mavlink_system_;
   std::string port_;

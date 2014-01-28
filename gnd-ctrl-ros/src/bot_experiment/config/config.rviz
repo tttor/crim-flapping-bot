@@ -8,6 +8,7 @@ Panels:
         - /Status1
         - /Grid1
         - /TF1
+        - /TF1/Status1
         - /TF1/Frames1
         - /TF1/Tree1
       Splitter Ratio: 0.5
@@ -57,7 +58,7 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        flymaple:
+        fcu:
           Value: true
         world:
           Value: true
@@ -68,7 +69,7 @@ Visualization Manager:
       Show Names: false
       Tree:
         world:
-          flymaple:
+          fcu:
             {}
       Update Interval: 0
       Value: true
@@ -96,17 +97,17 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.43331
+      Distance: 2.29615
       Focal Point:
         X: 0
         Y: 0
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.365399
+      Pitch: 0.200399
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.8504
+      Yaw: 2.6104
     Saved: ~
 Window Geometry:
   Displays:

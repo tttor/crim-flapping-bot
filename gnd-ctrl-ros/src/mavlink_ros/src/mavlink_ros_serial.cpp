@@ -32,7 +32,7 @@
  */
 
 #include <ros/ros.h>
-#include "sensor_msgs/Imu.h"
+#include <sensor_msgs/Imu.h>
 #include "sensor_msgs/MagneticField.h"
 #include "sensor_msgs/Temperature.h"
 #include "sensor_msgs/FluidPressure.h"

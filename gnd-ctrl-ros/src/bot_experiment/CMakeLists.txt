@@ -10,6 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   rosbag
   foo_msgs
   mavlink_ros
+  tf
   message_generation
 )
 

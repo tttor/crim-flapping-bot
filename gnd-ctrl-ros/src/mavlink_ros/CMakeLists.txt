@@ -81,10 +81,10 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES mavlink_ros
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
-#  DEPENDS system_lib
+  #INCLUDE_DIRS include
+  #LIBRARIES mavlink_ros
+  #CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+  #DEPENDS system_lib
 )
 
 ###########
@@ -118,6 +118,7 @@ add_dependencies(mavlink_ros_serial mavlink_ros_generate_messages_cpp)
 target_link_libraries(mavlink_ros_serial
  ${catkin_LIBRARIES}
  glib-2.0
+ log4cxx
 )
 
 #############

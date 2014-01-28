@@ -7,5 +7,5 @@ uint16 ch5_raw
 uint16 ch6_raw
 uint16 ch7_raw
 uint16 ch8_raw
-uint8 port
-uint8 rssi
+uint16 port
+uint16 rssi

@@ -58,7 +58,7 @@ Visualization Manager:
       Frames:
         All Enabled: false
         body:
-          Value: true
+          Value: false
         fcu:
           Value: true
         world:
@@ -100,17 +100,17 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.29615
+      Distance: 1.79437
       Focal Point:
         X: 0
         Y: 0
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.420399
+      Pitch: 0.170398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.6704
+      Yaw: 3.90541
     Saved: ~
 Window Geometry:
   Displays:

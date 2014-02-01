@@ -40,6 +40,7 @@
 #include <sensor_msgs/NavSatStatus.h>
 #include <mavlink_ros/Mavlink.h>
 #include <mavlink_ros/RadioControl.h>
+#include <tf/transform_datatypes.h>
 
 #include "mavlink/v1.0/common/mavlink.h"
 #include <glib.h>
@@ -512,8 +513,18 @@ void* serial_wait(void* serial_ptr)
 
             sensor_msgs::ImuPtr imu_msg(new sensor_msgs::Imu);
 
-            angle2quaternion(att.roll, -att.pitch, -att.yaw, &(imu_msg->orientation.w), &(imu_msg->orientation.x),
-                             &(imu_msg->orientation.y), &(imu_msg->orientation.z));
+            // Convert Euler to Quaternion                 
+            // http://wiki.ros.org/tf/Overview/Data%20Types
+            // http://answers.ros.org/question/50113/transform-quaternion/
+            // http://answers.ros.org/question/12452/deprecated-issue-regarding-btquaternion-in-electric/
+            
+            //angle2quaternion(att.roll, -att.pitch, -att.yaw, &(imu_msg->orientation.w), &(imu_msg->orientation.x),
+                             //&(imu_msg->orientation.y), &(imu_msg->orientation.z));
+                             
+            //tf::Quaternion q;
+            //q.setRPY(att.roll, att.pitch, att.yaw);
+            
+            imu_msg->orientation = tf::createQuaternionMsgFromRollPitchYaw(att.roll, att.pitch, att.yaw);
 
             // TODO: check/verify that these are body-fixed
             imu_msg->angular_velocity.x = att.rollspeed;
@@ -526,17 +537,13 @@ void* serial_wait(void* serial_ptr)
             imu_msg->linear_acceleration.z = -imu_raw.zacc;
 
             // TODO: can we fill in the covariance here from a parameter that we set from the specs/experience?
-            for (sensor_msgs::Imu::_orientation_covariance_type::iterator it = imu_msg->orientation_covariance.begin();
-                it != imu_msg->orientation_covariance.end(); ++it)
+            for (sensor_msgs::Imu::_orientation_covariance_type::iterator it = imu_msg->orientation_covariance.begin(); it != imu_msg->orientation_covariance.end(); ++it)
               *it = 0;
 
-            for (sensor_msgs::Imu::_angular_velocity_covariance_type::iterator it =
-                imu_msg->angular_velocity_covariance.begin(); it != imu_msg->angular_velocity_covariance.end(); ++it)
+            for (sensor_msgs::Imu::_angular_velocity_covariance_type::iterator it = imu_msg->angular_velocity_covariance.begin(); it != imu_msg->angular_velocity_covariance.end(); ++it)
               *it = 0;
 
-            for (sensor_msgs::Imu::_linear_acceleration_covariance_type::iterator it =
-                imu_msg->linear_acceleration_covariance.begin(); it != imu_msg->linear_acceleration_covariance.end();
-                ++it)
+            for (sensor_msgs::Imu::_linear_acceleration_covariance_type::iterator it = imu_msg->linear_acceleration_covariance.begin(); it != imu_msg->linear_acceleration_covariance.end(); ++it)
               *it = 0;
 
             imu_msg->header.frame_id = frame_id;

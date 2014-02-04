@@ -1,8 +1,10 @@
 <launch>
 <!-- GOAL: test pose data using rviz -->
-<!-- TODO @tttor: make a helper node to publish the tf used by rviz -->
 
 <node name="mavlink_bridge" pkg="mavlink_ros" type="mavlink_ros_serial"/> 
+<node name="helper" pkg="bot_experiment" type="helper"/> 
+
+<node name="body_fr_bc" pkg="tf" type="static_transform_publisher"  args="0 0 0 0 0 0 world body 100" />
 <node name="rviz" pkg="rviz" type="rviz" args="-d $(find bot_experiment)/config/config.rviz" />
 
 </launch>

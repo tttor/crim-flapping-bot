@@ -6,6 +6,8 @@
 #include <rosbag/view.h>
 #include <std_msgs/Int32.h>
 #include <mavlink_ros/RadioControl.h>
+#include <tf/transform_broadcaster.h>
+#include <sensor_msgs/Imu.h>
 
 #include <boost/foreach.hpp>
 #include <fstream>
@@ -14,7 +16,7 @@ namespace crim {
 
 class Helper {
  public:
-  Helper(ros::NodeHandle nh, std::string bag_path): nh_(nh), bag_(new rosbag::Bag(bag_path, rosbag::bagmode::Write)), bag_path_(bag_path) {
+  Helper(ros::NodeHandle nh, std::string bag_path): nh_(nh), bag_(new rosbag::Bag(bag_path, rosbag::bagmode::Write)), bag_path_(bag_path), logging_(false) {
     // nothing
   }
   
@@ -84,13 +86,40 @@ class Helper {
   void rc_sub_cb(const mavlink_ros::RadioControl& msg) {
     using namespace std;
     
-    bag_->write("/fcu/rc", ros::Time::now(),msg);
+    if (logging_)
+      bag_->write("/fcu/rc", ros::Time::now(),msg);
+  }
+  
+  /*
+   * @brief This logs the topic of /fcu/imu to publish a tf of frame /fcu
+   * 
+   */
+  void imu_sub_cb(const sensor_msgs::Imu& msg) {
+    using namespace std;
+    
+    static tf::TransformBroadcaster tf_broadcaster;
+    tf::Transform transform;
+    
+    transform.setOrigin( tf::Vector3(0., 0., 0.) );
+    transform.setRotation( tf::Quaternion(msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w) );
+    
+    ROS_DEBUG("Transforming tf from imu msg");
+    tf_broadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", msg.header.frame_id));
+  }
+  
+  void turn_on_logger() {
+    logging_ = true;
+  }
+  
+  void turn_off_logger() {
+    logging_ = false;
   }
   
  private:
   ros::NodeHandle nh_;
   rosbag::Bag* bag_;
   std::string bag_path_;
+  bool logging_;
 };
 
 }// using namespace crim

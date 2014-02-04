@@ -57,10 +57,12 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        flymaple:
+        body:
+          Value: false
+        fcu:
           Value: true
         world:
-          Value: true
+          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -68,7 +70,9 @@ Visualization Manager:
       Show Names: false
       Tree:
         world:
-          flymaple:
+          body:
+            {}
+          fcu:
             {}
       Update Interval: 0
       Value: true
@@ -96,17 +100,17 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.43331
+      Distance: 1.79437
       Focal Point:
         X: 0
         Y: 0
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.365399
+      Pitch: 0.170398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.8504
+      Yaw: 3.90541
     Saved: ~
 Window Geometry:
   Displays:

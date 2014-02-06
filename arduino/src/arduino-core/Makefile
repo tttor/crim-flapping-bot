@@ -13,7 +13,7 @@ LIBDIR=../../lib
 
 OBJECTS=  pins_arduino.o wiring.o wiring_analog.o wiring_digital.o \
 					wiring_pulse.o wiring_shift.o HardwareSerial.o Print.o   \
-		 			Tone.o WMath.o WString.o WInterrupts.o new.o
+		 			Tone.o WMath.o WString.o WInterrupts.o new.o 
 
 default: $(OBJECTS)
 	avr-ar rcs $(LIBNAME) $^
@@ -30,4 +30,5 @@ default: $(OBJECTS)
 	$(CXX) $< $(CFLAGS) $(INCLUDE) -c -o $@
 	
 clean:
-	$(shell rm $(LIBDIR)/*.a 2> /dev/null)
+	$(shell rm $(LIBDIR)/$(LIBNAME) 2> /dev/null)
+	$(shell rm $(INCDIR)/*.h 2> /dev/null)

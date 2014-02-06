@@ -6,3 +6,10 @@ build some libs whose source code is under ./src; the needed Makefile is inside 
 Install some necessary packages:
 $ sudo apt-get install avrdude binutils-avr gcc-avr avr-libc gdb-avr
 
+===
+REF:
+http://arduino.cc/en/Reference/Libraries
+http://arduino.cc/en/Reference/HomePage
+http://www.gammon.com.au/forum/?id=11488 (Interrupts)
+http://www.nongnu.org/avr-libc/user-manual/library.html (How to Build a Library)
+

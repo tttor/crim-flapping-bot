@@ -5,19 +5,21 @@ CPU_SPEED=-DF_CPU=16000000UL
 UPLOAD_BAUDRATE=115200
 
 CXX_COMPILER= avr-gcc
-INCLUDE= -I ./include/
-INCLUDE_2= -I ./include/arduino-core # Because some files from arduino-core include headers using <#include <new.h> instead of <arduino/new>
-LIBS= -L ./lib -lm -larduino-core
 CFLAGS= $(MCU) $(CPU_SPEED) -Os -w -Wl,--gc-sections -ffunction-sections -fdata-sections
 PORT= /dev/ttyACM0
 BUILD_DIR= ./build
 
+INCLUDE= -I ./include/
+INCLUDE_2= -I ./include/arduino-core # Because some files from arduino-core include headers using #include <new.h> instead of #include <arduino/new>
+LIBS= -L ./lib -larduino-core -lm # _must_ be in this order, see: http://stackoverflow.com/questions/11111966/eclipse-arduino-linker-trouble
+
 # Put objects to build here
-OBJECTS= main.cpp
+#OBJECTS= main.cpp
+OBJECTS= main.cpp ./src/encoder/two_phase_incremental_encoder.cpp # the encoder src files is included here as a workaround for problem: fail to link arduino core when building the encoder lib
 
 default:
 	mkdir -p $(BUILD_DIR)
-	$(CXX_COMPILER) $(OBJECTS) $(CFLAGS) $(INCLUDE) $(INCLUDE_2) $^ -o $(BUILD_DIR)/main.elf $(LIBS)
+	$(CXX_COMPILER) $(CFLAGS) $(INCLUDE) $(INCLUDE_2) $^ -o $(BUILD_DIR)/main.elf $(OBJECTS) $(LIBS)
 	avr-objcopy -O ihex $(BUILD_DIR)/main.elf $(BUILD_DIR)/main.hex
 
 upload:
@@ -30,6 +32,4 @@ clean:
 	$(shell rm *.hex 2> /dev/null)
 	$(shell rm *.o 2> /dev/null)
 	rm -rf $(BUILD_DIR)
-	
-%.o: %.cpp
-	$(CXX_COMPILER) $< $(CFLAGS) $(INCLUDE) -c -o $@
+

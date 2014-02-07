@@ -1,6 +1,6 @@
 # REF: http://www.ashleymills.com/node/327
-MCU=-mmcu=atmega328p
-MCU_TAG=m328p # See the avrdude manual
+MCU=-mmcu=ATmega2560 # atmega328p
+MCU_TAG=m2560 # See the avrdude manual: m328p
 CPU_SPEED=-DF_CPU=16000000UL
 UPLOAD_BAUDRATE=115200
 

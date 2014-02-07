@@ -1,8 +1,10 @@
 # REF: http://www.ashleymills.com/node/327
-MCU=-mmcu=ATmega2560 # atmega328p
-MCU_TAG=m2560 # See the avrdude manual: m328p
-CPU_SPEED=-DF_CPU=16000000UL
-UPLOAD_BAUDRATE=115200
+# For board-specific setting see: https://github.com/arduino/Arduino/blob/master/hardware/arduino/boards.txt
+MCU= -mmcu=atmega2560 # atmega328p
+MCU_TAG= m2560 # See the avrdude manual: m328p
+CPU_SPEED= -DF_CPU=16000000UL
+UPLOAD_BAUDRATE= 115200 
+UPLOAD_PROTOCOL= wiring # arduino, wiring, avr109
 
 CXX_COMPILER= avr-gcc
 CFLAGS= $(MCU) $(CPU_SPEED) -Os -w -Wl,--gc-sections -ffunction-sections -fdata-sections
@@ -23,7 +25,7 @@ default:
 	avr-objcopy -O ihex $(BUILD_DIR)/main.elf $(BUILD_DIR)/main.hex
 
 upload:
-	avrdude -V -F -p $(MCU_TAG) -c arduino -b $(UPLOAD_BAUDRATE) -Uflash:w:$(BUILD_DIR)/main.hex -P$(PORT)
+	avrdude -V -F -D -p $(MCU_TAG) -c $(UPLOAD_PROTOCOL) -b $(UPLOAD_BAUDRATE) -Uflash:w:$(BUILD_DIR)/main.hex -P$(PORT)
 
 install: upload
 

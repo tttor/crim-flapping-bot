@@ -23,6 +23,8 @@ class TwoPhaseIncrementalEncoder {
    */
   double rot();
   
+  static const double kPhi;
+  
  private:
   size_t out_a_pin_;// external interrupt 0 pin
   size_t out_b_pin_;// external interrupt 1 pin

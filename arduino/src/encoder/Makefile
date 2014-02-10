@@ -27,12 +27,14 @@ OBJECTS= two_phase_incremental_encoder.cpp
 default:
 	#$(CXX_COMPILER) $(INCLUDE) $(INCLUDE_2) $(INCLUDE_3) $(OBJECTS) $(CFLAGS) -o encoder.o $(LIBS)
 	#avr-ar rcs $(LIBNAME) encoder.o
+
+install:
 	mkdir -p $(INCDIR)
 	#mkdir -p $(LIBDIR)
 	cp *.hpp $(INCDIR)
 	#mv $(LIBNAME) $(LIBDIR)
 	#rm *.o
-	
+
 clean:
 	$(shell rm $(LIBDIR)/$(LIBNAME) 2> /dev/null)
 	$(shell rm $(INCDIR)/*.hpp 2> /dev/null)

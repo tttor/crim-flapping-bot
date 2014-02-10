@@ -1,6 +1,6 @@
 # REF: http://www.ashleymills.com/node/327
 BOARD=arduino
-MCU=-mmcu=atmega328p 
+MCU=-mmcu=atmega2560 # atmega328p 
 CPU_SPEED=-DF_CPU=16000000UL
 
 CC=avr-gcc
@@ -17,18 +17,20 @@ OBJECTS=  pins_arduino.o wiring.o wiring_analog.o wiring_digital.o \
 
 default: $(OBJECTS)
 	avr-ar rcs $(LIBNAME) $^
+
+install:
 	mkdir -p $(INCDIR)
 	mkdir -p $(LIBDIR)
 	cp *.h $(INCDIR)/
 	mv $(LIBNAME) $(LIBDIR)
 	rm *.o
-
+	
+clean:
+	$(shell rm $(LIBDIR)/$(LIBNAME) 2> /dev/null)
+	$(shell rm $(INCDIR)/*.h 2> /dev/null)
+	
 %.o : %.c
 	$(CC) $< $(CFLAGS) $(INCLUDE) -c -o $@
 
 %.o : %.cpp
 	$(CXX) $< $(CFLAGS) $(INCLUDE) -c -o $@
-	
-clean:
-	$(shell rm $(LIBDIR)/$(LIBNAME) 2> /dev/null)
-	$(shell rm $(INCDIR)/*.h 2> /dev/null)

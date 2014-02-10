@@ -1,14 +1,16 @@
-#include <arduino-core/WProgram.h>
+#include <arduino-core/Arduino.h>
 
 void setup() {
   pinMode(13,OUTPUT);
 }
 
 void loop() {
+  const unsigned int kDuration = 100;
+  
   digitalWrite(13,HIGH);
-  delay(100);
+  delay(kDuration);
   digitalWrite(13,LOW);
-  delay(100);
+  delay(kDuration);
 }
 
 int main() {

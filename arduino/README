@@ -7,6 +7,11 @@ Install some necessary packages:
 $ sudo apt-get install avrdude binutils-avr gcc-avr avr-libc gdb-avr
 
 ===
+TODO
+@tttor: create a hierarchical makefile
+@tttor: solve linking issues when building src/encoder
+
+===
 REF:
 http://arduino.cc/en/Reference/Libraries
 http://arduino.cc/en/Reference/HomePage

@@ -7,7 +7,7 @@
 # REF:
 #http://forums.adafruit.com/viewtopic.php?f=25&p=161974
 
-MCU=-mmcu=atmega328p 
+MCU=-mmcu=atmega2560 # atmega328p
 CPU_SPEED=-DF_CPU=16000000UL
 
 INCDIR=../../include/encoder

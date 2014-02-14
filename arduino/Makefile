@@ -16,8 +16,9 @@ INCLUDE_2= -I ./include/arduino-core # Because some files from arduino-core incl
 LIBS= -L ./lib -larduino-core -lm # _must_ be in this order, see: http://stackoverflow.com/questions/11111966/eclipse-arduino-linker-trouble
 
 # Put objects to build here
+# the encoder src files is included here as a workaround for problem: fail to link arduino core when building the encoder lib
 #OBJECTS= main.cpp
-OBJECTS= main.cpp ./src/encoder/two_phase_incremental_encoder.cpp # the encoder src files is included here as a workaround for problem: fail to link arduino core when building the encoder lib
+OBJECTS= main.cpp ./src/encoder/two_phase_incremental_encoder.cpp ./src/sensor/chr_um6_packet.cpp ./src/sensor/chr_um6.cpp
 
 default:
 	mkdir -p $(BUILD_DIR)

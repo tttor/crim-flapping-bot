@@ -17,4 +17,7 @@ http://arduino.cc/en/Reference/Libraries
 http://arduino.cc/en/Reference/HomePage
 http://www.gammon.com.au/forum/?id=11488 (Interrupts)
 http://www.nongnu.org/avr-libc/user-manual/library.html (How to Build a Library)
+http://stackoverflow.com/questions/16276293/c-standard-compliance-in-avr-gcc (AVR-GCC is not compliant with the C++ Language Standard)
+http://stackoverflow.com/questions/9986591/vectors-in-arduino?lq=1
+https://github.com/maniacbug/StandardCplusplus (Standard C++ for Arduino)
 

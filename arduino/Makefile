@@ -13,16 +13,17 @@ BUILD_DIR= ./build
 
 INCLUDE= -I ./include/
 INCLUDE_2= -I ./include/arduino-core # Because some files from arduino-core include headers using #include <new.h> instead of #include <arduino/new>
+INCLUDE_3= -I ../common/mavlink/include
 LIBS= -L ./lib -larduino-core -lm # _must_ be in this order, see: http://stackoverflow.com/questions/11111966/eclipse-arduino-linker-trouble
 
 # Put objects to build here
 # the encoder src files is included here as a workaround for problem: fail to link arduino core when building the encoder lib
 #OBJECTS= main.cpp
-OBJECTS= main.cpp ./src/encoder/two_phase_incremental_encoder.cpp ./src/sensor/chr_um6_packet.cpp ./src/sensor/chr_um6.cpp
+OBJECTS= main.cpp ./src/encoder/two_phase_incremental_encoder.cpp ./src/sensor/chr_um6_packet.cpp ./src/sensor/chr_um6.cpp ./src/comm/arduino_mavlink_packet_handler.cpp
 
 default:
 	mkdir -p $(BUILD_DIR)
-	$(CXX_COMPILER) $(CFLAGS) $(INCLUDE) $(INCLUDE_2) $^ -o $(BUILD_DIR)/main.elf $(OBJECTS) $(LIBS)
+	$(CXX_COMPILER) $(CFLAGS) $(INCLUDE) $(INCLUDE_2) $(INCLUDE_3) $^ -o $(BUILD_DIR)/main.elf $(OBJECTS) $(LIBS)
 	avr-objcopy -O ihex $(BUILD_DIR)/main.elf $(BUILD_DIR)/main.hex
 
 upload:

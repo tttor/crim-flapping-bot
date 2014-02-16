@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <log4cxx/logger.h>
 #include <std_msgs/String.h>
 
 #include <sensor_msgs/NavSatStatus.h>

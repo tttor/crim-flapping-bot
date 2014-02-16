@@ -1,4 +1,5 @@
 #include <ros/ros.h>
+#include <log4cxx/logger.h>
 #include "helper.hpp"
 
 int main(int argc, char** argv) {

@@ -32,6 +32,7 @@
  */
 
 #include <ros/ros.h>
+#include <log4cxx/logger.h>
 #include <sensor_msgs/Imu.h>
 #include "sensor_msgs/MagneticField.h"
 #include "sensor_msgs/Temperature.h"

@@ -75,7 +75,8 @@ enum MAV_TYPE
 	MAV_TYPE_TRICOPTER=15, /* Octorotor | */
 	MAV_TYPE_FLAPPING_WING=16, /* Flapping wing | */
 	MAV_TYPE_KITE=17, /* Flapping wing | */
-	MAV_TYPE_ENUM_END=18, /*  | */
+  MAV_TYPE_TEST_BENCH=18,// Room-sized test bench, added by tor
+	MAV_TYPE_ENUM_END=19, /*  | */
 };
 #endif
 
@@ -195,7 +196,10 @@ enum MAV_COMPONENT
 	MAV_COMP_ID_UDP_BRIDGE=240, /*  | */
 	MAV_COMP_ID_UART_BRIDGE=241, /*  | */
 	MAV_COMP_ID_SYSTEM_CONTROL=250, /*  | */
-	MAV_COMPONENT_ENUM_END=251, /*  | */
+  MAV_COMP_ID_STATIC_TEST_BENCH_ARDUINO=260,// added by vektor
+  MAV_COMP_ID_MOBILE_TEST_BENCH_ARDUINO=261,// added by vektor
+  MAV_COMP_ID_TEST_BENCH_WORKSTATION=262,// added by vektor
+	MAV_COMPONENT_ENUM_END=263, /*  | */ // changed by vektor
 };
 #endif
 

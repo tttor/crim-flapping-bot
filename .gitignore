@@ -17,6 +17,7 @@ gnd-ctrl-ros/src/bot_experiment/data
 flymaple/common/
 flymaple/build/
 arduino/build/
+arduino/include/
 
 # the main-and-hot file for flymaple programming
 flymaple/main.cpp

@@ -58,11 +58,11 @@ Visualization Manager:
       Frames:
         All Enabled: false
         body:
-          Value: false
+          Value: true
         fcu:
           Value: true
         world:
-          Value: false
+          Value: true
       Marker Scale: 1
       Name: TF
       Show Arrows: true
@@ -107,10 +107,10 @@ Visualization Manager:
         Z: 0
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.170398
+      Pitch: 0.365398
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.90541
+      Yaw: 3.63041
     Saved: ~
 Window Geometry:
   Displays:

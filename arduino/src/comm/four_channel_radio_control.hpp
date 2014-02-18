@@ -25,15 +25,15 @@ void rc_ch_3_int_handler();
 void rc_ch_4_int_handler();
 void rc_update_ch_value(const uint8_t& pin, volatile uint16_t* ch_timer_begin, volatile uint16_t* ch_value);
 
-volatile uint16_t g_rc_ch_values[4] = {0};
-volatile uint16_t g_rc_ch_timer_begins[4] = {0};
+const uint8_t kFourChannelRCMaxNChannel = 4;
+volatile uint16_t g_rc_ch_values[kFourChannelRCMaxNChannel] = {0};
+volatile uint16_t g_rc_ch_timer_begins[kFourChannelRCMaxNChannel] = {0};
 
-uint8_t g_rc_ch_pins[4] = {21, 20, 19, 18};
-voidFuncPtr g_rc_ch_int_handlers[4] = {(voidFuncPtr) &rc_ch_1_int_handler, (voidFuncPtr) &rc_ch_2_int_handler, (voidFuncPtr) &rc_ch_3_int_handler, (voidFuncPtr) &rc_ch_4_int_handler};
+uint8_t g_rc_ch_pins[kFourChannelRCMaxNChannel] = {21, 20, 19, 18};
+voidFuncPtr g_rc_ch_int_handlers[kFourChannelRCMaxNChannel] = {(voidFuncPtr) &rc_ch_1_int_handler, (voidFuncPtr) &rc_ch_2_int_handler, (voidFuncPtr) &rc_ch_3_int_handler, (voidFuncPtr) &rc_ch_4_int_handler};
 
 bool rc_init(uint8_t n_ch) {
-  const uint8_t kMaxNChannel = 4;
-  if (n_ch < kMaxNChannel) 
+  if (n_ch > kFourChannelRCMaxNChannel) 
     return false;
   
   for (uint8_t i=0; i<n_ch; ++i) {
@@ -45,7 +45,10 @@ bool rc_init(uint8_t n_ch) {
 }
 
 uint16_t rc_read(uint8_t ch) {
-  return g_rc_ch_values[ch-1];
+  if (ch > kFourChannelRCMaxNChannel)
+    return 0;
+  else  
+    return g_rc_ch_values[ch-1];
 }
 
 void rc_update_ch_value(const uint8_t& pin, volatile uint16_t* ch_timer_begin, volatile uint16_t* ch_value) {

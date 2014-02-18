@@ -43,6 +43,11 @@ class ArduinoMavlinkPacketHandler {
    * @brief 
    */
   void wrap(mavlink_mission_set_current_t raw_msg);
+  
+  /**
+   * @brief 
+   */
+  void wrap(mavlink_rc_channels_raw_t raw_msg);
       
   /**
    * @brief For Euler angle attitude. This blocks till the desired msg has been received
@@ -63,6 +68,11 @@ class ArduinoMavlinkPacketHandler {
    * @brief 
    */
   void wait(uint8_t sysid, uint8_t compid, uint8_t msgid, mavlink_mission_set_current_t* the_msg);
+  
+  /**
+   * @brief 
+   */
+  void wait(uint8_t sysid, uint8_t compid, uint8_t msgid, mavlink_rc_channels_raw_t* the_msg);
  
  private:
   mavlink_system_t mavlink_system_;

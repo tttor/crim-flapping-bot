@@ -20,7 +20,12 @@ LIBS= -L ./lib -larduino-core -lm # _must_ be in this order, see: http://stackov
 # Put objects to build here
 # the src files is included here as a workaround for problem: fail to link arduino core when building the corresponding lib
 #OBJECTS= main.cpp
-OBJECTS= main.cpp ./src/sensor/two_phase_incremental_encoder.cpp ./src/sensor/chr_um6_packet.cpp ./src/sensor/chr_um6.cpp ./src/comm/arduino_mavlink_packet_handler.cpp
+OBJECTS= main.cpp \
+				./src/sensor/two_phase_incremental_encoder.cpp \
+				./src/sensor/chr_um6_packet.cpp \
+				./src/sensor/chr_um6.cpp \
+				./src/comm/arduino_mavlink_packet_handler.cpp \
+				./src/actuator/electronics_speed_controller.cpp
 
 default:
 	mkdir -p $(BUILD_DIR)

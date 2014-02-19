@@ -34,7 +34,7 @@ struct Quaternion {
  * 4. A sequence of data bytes, the length of which is specified in the PT byte, maximum of 2^4=16 registers (in the batch mode); that is 16 * 4 bytes = 64 bytes
  * 5. A two-byte checksum for error-detection
  * 
- * The current implementation (Feb 14, 2014) required that the communication happens via Serial1 with the baudrate of 115200
+ * The current implementation (Feb 14, 2014) required that the communication happens via Serial2 with the baudrate of 115200
  */
 class CHR_UM6_packet {
  public:
@@ -55,13 +55,13 @@ class CHR_UM6_packet {
   ~CHR_UM6_packet();
   
   /**
-   * Require the comm is using Serial1
+   * Require the comm is using Serial2
    */
   bool send();
   
   /**
    * @brief block till a valid (not necessarily with the desired addr) packet is found
-   * Require the comm is using Serial1 with the baudrate of 115200
+   * Require the comm is using Serial2 with the baudrate of 115200
    */
   bool wait();
   

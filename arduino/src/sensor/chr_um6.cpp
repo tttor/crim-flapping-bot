@@ -3,11 +3,11 @@
 using namespace crim;
 
 CHR_UM6::CHR_UM6() {
-  Serial1.begin(115200);
+  Serial2.begin(115200);
 }
 
 CHR_UM6::~CHR_UM6() {
-  Serial1.end();
+  Serial2.end();
 }
 
 String CHR_UM6::firmware_version() {

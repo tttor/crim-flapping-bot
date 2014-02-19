@@ -118,6 +118,15 @@ void ArduinoMavlinkPacketHandler::wrap(mavlink_mission_set_current_t raw_msg) {
                                        raw_msg.target_system, raw_msg.target_component, raw_msg.seq);
 }
 
+void ArduinoMavlinkPacketHandler::wrap(mavlink_rc_channels_raw_t raw_msg) {
+  mavlink_msg_rc_channels_raw_pack(mavlink_system_.sysid, mavlink_system_.compid, msg_, 
+                                   raw_msg.time_boot_ms,
+                                   raw_msg.port,
+                                   raw_msg.chan1_raw, raw_msg.chan2_raw, raw_msg.chan3_raw, raw_msg.chan4_raw, 
+                                   raw_msg.chan5_raw, raw_msg.chan6_raw, raw_msg.chan7_raw, raw_msg.chan8_raw, 
+                                   raw_msg.rssi);
+}
+
 void ArduinoMavlinkPacketHandler::wait(uint8_t sysid, uint8_t compid, uint8_t msgid, mavlink_attitude_t* the_msg){
   wait(sysid, compid, msgid, msg_); // block till receive the desired msg
   mavlink_msg_attitude_decode(msg_, the_msg);
@@ -136,4 +145,9 @@ void ArduinoMavlinkPacketHandler::wait(uint8_t sysid, uint8_t compid, uint8_t ms
 void ArduinoMavlinkPacketHandler::wait(uint8_t sysid, uint8_t compid, uint8_t msgid, mavlink_mission_set_current_t* the_msg) {
   wait(sysid, compid, msgid, msg_); // block till receive the desired msg
   mavlink_msg_mission_set_current_decode(msg_, the_msg);
+}
+
+void ArduinoMavlinkPacketHandler::wait(uint8_t sysid, uint8_t compid, uint8_t msgid, mavlink_rc_channels_raw_t* the_msg) {
+  wait(sysid, compid, msgid, msg_); // block till receive the desired msg
+  mavlink_msg_rc_channels_raw_decode(msg_, the_msg);
 }

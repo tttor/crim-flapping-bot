@@ -3,6 +3,7 @@
 
 #include <arduino-core/Arduino.h>
 #include <arduino-core/wiring_private.h>// for voidFuncPtr
+#include <macro/macro.h>
 
 namespace crim {
 
@@ -18,12 +19,10 @@ class TwoPhaseIncrementalEncoder {
   int64_t pos();
   
   /**
-   * @brief return the number of rotation in double, can be negative
+   * @brief return how much rotarion in radians, can be negative
    * 
    */
   double rot();
-  
-  static const double kPhi;
   
  private:
   size_t out_a_pin_;// external interrupt 0 pin

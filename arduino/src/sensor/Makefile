@@ -19,13 +19,14 @@ LIBNAME= libsensor.a
 
 #INCLUDE_2= -I ../../include
 #INCLUDE_3= -I ../../include/arduino-core # Because some files from arduino-core include headers using #include <new.h> instead of #include <arduino/new>
+#INCLUDE_4= -I ../common/macro/include
 #LIBS= -L $(LIBDIR) -larduino-core -lm # _must_ be in this order, see: http://stackoverflow.com/questions/11111966/eclipse-arduino-linker-trouble
 #LIBS= -Wl,--start-group $(LIBDIR)/libsensor-core.a -Wl,--end-group, # see: http://stackoverflow.com/questions/11946536/undefined-reference-when-linking-static-libraries
 
-OBJECTS= chr_um6_packet.cpp chr_um6.cpp
+OBJECTS= chr_um6_packet.cpp chr_um6.cpp two_phase_incremental_encoder.cpp
 
 default:
-	#$(CXX_COMPILER) $(INCLUDE) $(INCLUDE_2) $(INCLUDE_3) $(OBJECTS) $(CFLAGS) -o encoder.o $(LIBS)
+	#$(CXX_COMPILER) $(INCLUDE) $(INCLUDE_2) $(INCLUDE_3) $(INCLUDE_4) $(OBJECTS) $(CFLAGS) -o encoder.o $(LIBS)
 	#avr-ar rcs $(LIBNAME) sensor.o
 
 install:

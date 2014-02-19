@@ -4,7 +4,6 @@ using namespace crim;
 
 int64_t TwoPhaseIncrementalEncoder::phase_a_counter_ = 0;
 bool TwoPhaseIncrementalEncoder::phase_b_state_ = 0;
-const double TwoPhaseIncrementalEncoder::kPhi = 3.1415926;
 
 TwoPhaseIncrementalEncoder::TwoPhaseIncrementalEncoder(size_t out_a_pin, size_t out_b_pin, uint64_t resolution)
     : out_a_pin_(out_a_pin), out_b_pin_(out_b_pin), resolution_(resolution) {
@@ -30,7 +29,7 @@ int64_t TwoPhaseIncrementalEncoder::pos() {
 }
 
 double TwoPhaseIncrementalEncoder::rot() {
-  return (double)phase_a_counter_/resolution_*2*TwoPhaseIncrementalEncoder::kPhi;
+  return (double)phase_a_counter_/resolution_*2*crim::kPhi;
 }
 
 void TwoPhaseIncrementalEncoder::ext_int0_handler() {

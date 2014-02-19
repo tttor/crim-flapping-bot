@@ -1,0 +1,31 @@
+===
+Wiring:
+
+On the Mobile Arduino:
+2 <-- Encoder: Phase A 
+3 <-- Encoder: Phase B
+14 --> XBEE RX 
+15 <-- XBEE TX
+16 --> UM6 RX
+17 <-- UM6 TX
+18 <-- RC Channel 5
+19 <-- RC Channel 3
+20 <-- RC Channel 2
+21 <-- RC Channel 1
+
+On the Static Arduino:
+2 <-- Encoder: Phase A 
+3 <-- Encoder: Phase B
+
+===
+Note:
+
+Tasks for the static arduino:
+1. receive data (encoder, um6(attitude) and rc (control)) from the mobile arduino
+2. synch and wrap the attitude, position, and control data into a test-bench packet
+3. send the test-bench packet to the test-bench workstation
+
+Tasks for the static arduino:
+1. read encoder and um6 sensor and the rc data
+2. send those data to the static arduino
+3. control one brushless motor and two servos

@@ -1,10 +1,10 @@
 #include <arduino-core/Arduino.h>
 #include <arduino-core/wiring_private.h>// for voidFuncPtr
-#include <encoder/two_phase_incremental_encoder.hpp>
+#include <sensor/two_phase_incremental_encoder.hpp>
 
 int main() {
   init();// this needs to be called before setup() or some functions won't work there
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   const size_t encoder_out_a_pin = 2;
   const size_t encoder_out_b_pin = 3;

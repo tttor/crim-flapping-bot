@@ -43,7 +43,7 @@ bool CHR_UM6_packet::send() {
   buffer[CHR_UM6_packet::header_len + CHR_UM6_packet::type_len + CHR_UM6_packet::addr_len + data_len + (CHR_UM6_packet::checksum_len)/2] = lo_byte_checksum;
   
   //
-  Serial1.write(buffer, buffer_len);
+  Serial2.write(buffer, buffer_len);
 }
 
 bool CHR_UM6_packet::wait() {
@@ -58,8 +58,8 @@ bool CHR_UM6_packet::wait() {
     // Fill in the buffer
     uint8_t rx_buffer_idx = 0;
     while (true) {// Note: This loop is critical; _must_ be as fast as possible: No delay, otherwise, some characters are likely missed
-      if (Serial1.available() > 0) {
-        uint8_t rx_datum = Serial1.read();
+      if (Serial2.available() > 0) {
+        uint8_t rx_datum = Serial2.read();
         //Serial.print("rx_datum= "); Serial.println(rx_datum, HEX);
         
         if (rx_buffer_idx < rx_buffer_len) {

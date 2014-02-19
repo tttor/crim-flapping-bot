@@ -25,7 +25,8 @@ OBJECTS= main.cpp \
 				./src/sensor/chr_um6_packet.cpp \
 				./src/sensor/chr_um6.cpp \
 				./src/comm/arduino_mavlink_packet_handler.cpp \
-				./src/actuator/electronics_speed_controller.cpp
+				./src/actuator/electronics_speed_controller.cpp \
+				./src/actuator/servo.cpp
 
 default:
 	mkdir -p $(BUILD_DIR)

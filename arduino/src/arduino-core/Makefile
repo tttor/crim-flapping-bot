@@ -1,6 +1,6 @@
 # REF: http://www.ashleymills.com/node/327
 BOARD=arduino
-MCU=-mmcu=atmega2560 # atmega328p 
+MCU=-mmcu=atmega328p # atmega328p, atmega2560
 CPU_SPEED=-DF_CPU=16000000UL
 
 CC=avr-gcc

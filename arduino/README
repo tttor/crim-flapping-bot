@@ -1,10 +1,13 @@
 ===
+NOTES
+
 For the first use, 
 build some libs whose source code is under ./src; the needed Makefile is inside each lib dir
 
-===
 Install some necessary packages:
 $ sudo apt-get install avrdude binutils-avr gcc-avr avr-libc gdb-avr
+
+Calibrate the ESC using the RC remote directly.
 
 ===
 TODO
@@ -20,4 +23,6 @@ http://www.nongnu.org/avr-libc/user-manual/library.html (How to Build a Library)
 http://stackoverflow.com/questions/16276293/c-standard-compliance-in-avr-gcc (AVR-GCC is not compliant with the C++ Language Standard)
 http://stackoverflow.com/questions/9986591/vectors-in-arduino?lq=1
 https://github.com/maniacbug/StandardCplusplus (Standard C++ for Arduino)
-
+http://diydrones.com/forum/topics/arduino-control-of-esc (Control ESC with the Arduino's servo lib)
+http://www.instructables.com/id/Arduino-Timer-Interrupts/step2/Structuring-Timer-Interrupts/ (timer setting)
+https://sites.google.com/site/qeewiki/books/avr-guide/external-interrupts-on-the-atmega328 (interrupts: ext and pcint)
